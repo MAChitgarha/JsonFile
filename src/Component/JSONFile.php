@@ -43,7 +43,7 @@ class JSONFile extends JSON
 
     protected function create()
     {
-        if (!touch($this->filePath))
+        if (!@touch($this->filePath))
             throw new \Exception("Cannot create the file");
         return true;
     }
