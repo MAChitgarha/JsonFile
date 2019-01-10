@@ -23,6 +23,6 @@ class JSONFile extends JSON
 
     public function save(int $options = JSON_PRETTY_PRINT)
     {
-        file_put_contents($this->data);
+        file_put_contents($this->getDataAsJson($options));
     }
 }
