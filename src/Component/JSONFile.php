@@ -2,6 +2,8 @@
 
 namespace MAChitgarha\Component;
 
+use Webmozart\PathUtil\Path;
+
 class JSONFile extends JSON
 {
     protected $filePath;
@@ -44,5 +46,15 @@ class JSONFile extends JSON
         if (!touch($this->filePath))
             throw new \Exception("Cannot create the file");
         return true;
+    }
+
+    public function getFilename()
+    {
+        return Path::getFilename($this->filePath);
+    }
+
+    public function getFilePath()
+    {
+        return Path::canonicalize($this->filePath);
     }
 }
