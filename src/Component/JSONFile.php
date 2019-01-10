@@ -6,11 +6,22 @@ class JSONFile extends JSON
 {
     protected $filePath;
 
-    public function __construct(string $filePath)
+    public function __construct(string $filePath, bool $creationMode = true)
     {
         $this->filePath = $filePath;
 
-        parent::__construct($this->read());
+        try {
+            $data = $this->read();
+        } catch (\Exception $e) {
+            if ($creationMode) {
+                $this->create();
+                $data = [];
+            } else {
+                throw $e;
+            }
+        }
+
+        parent::__construct($data);
     }
 
     protected function read()
@@ -26,5 +37,12 @@ class JSONFile extends JSON
     public function save(int $options = JSON_PRETTY_PRINT)
     {
         file_put_contents($this->getDataAsJson($options));
+    }
+
+    protected function create()
+    {
+        if (!touch($this->filePath))
+            throw new \Exception("Cannot create the file");
+        return true;
     }
 }
