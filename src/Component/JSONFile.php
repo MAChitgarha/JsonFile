@@ -36,15 +36,26 @@ class JSONFile extends JSON
         return file_get_contents($this->filePath);
     }
 
+    protected function write($data)
+    {
+        if (!file_exists($this->filePath))
+            throw new \Exception("File doesn't exist");
+        if (!is_writable($this->filePath))
+            throw new \Exception("File is not readable");
+
+        return file_put_contents(new parent($data));
+    }
+
     public function save(int $options = JSON_PRETTY_PRINT)
     {
-        file_put_contents($this->getDataAsJson($options));
+        $this->write($this->getDataAsJson($options));
     }
 
     protected function create()
     {
         if (!@touch($this->filePath))
             throw new \Exception("Cannot create the file");
+        $this->write([]);
         return true;
     }
 
