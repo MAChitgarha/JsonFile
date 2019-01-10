@@ -21,11 +21,11 @@
         "php": "^7.0",
         "machitgarha/json": "^0.3"
     },
-    "suggest": {
-
-    },
+    "suggest": {},
     "autoload": {
-        
+        "psr-4": {
+            "MAChitgarha\\": "src"
+        }
     },
     "type": "library",
     "require-dev": {
