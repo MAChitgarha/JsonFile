@@ -1,0 +1,34 @@
+{
+    "name": "machitgarha/json-file",
+    "description": "Manages your JSON files easily",
+    "authors": [
+        {
+            "name": "Mohammad Amin Chitgarha",
+            "email": "machitgarha@outlook.com",
+            "homepage": "https://github.com/machitgarha",
+            "role": "Creator"
+        }
+    ],
+    "homepage": "https://github.com/machitgarha/json",
+    "keywords": [
+        "json",
+        "files",
+        "php7"
+    ],
+    "license": "MIT",
+    "readme": "README.md",
+    "require": {
+        "php": "^7.0",
+        "machitgarha/json": "^0.3"
+    },
+    "suggest": {
+
+    },
+    "autoload": {
+        
+    },
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    }
+}
