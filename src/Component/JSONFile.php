@@ -15,6 +15,8 @@ class JSONFile extends JSON
 
     protected function read()
     {
+        if (!file_exists($this->filePath))
+            throw new \Exception("File doesn't exist");
         if (!is_readable($this->filePath))
             throw new \Exception("File is not readable");
         
