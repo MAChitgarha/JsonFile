@@ -7,15 +7,15 @@ use Webmozart\PathUtil\Path;
 class JSONFile extends JSON
 {
     protected $filePath;
-    protected $strictFile = false;
+    protected $fileMustExist = false;
     protected $ignoreInvalidFile = false;
 
-    const STRICT_FILE = 1;
+    const FILE_MUST_EXIST = 1;
     const IGNORE_INVALID_FILE = 2;
 
     public function __construct(string $filePath, int $options = 0)
     {
-        $this->strictFile = $options & self::STRICT_FILE;
+        $this->fileMustExist = $options & self::FILE_MUST_EXIST;
         $this->ignoreInvalidFile = $options & self::IGNORE_INVALID_FILE;
 
         $this->filePath = $filePath;
@@ -23,7 +23,7 @@ class JSONFile extends JSON
         try {
             $data = $this->read();
         } catch (\Exception $e) {
-            if ($this->strictFile) {
+            if ($this->fileMustExist) {
                 throw $e;
             } else {
                 $this->create();
