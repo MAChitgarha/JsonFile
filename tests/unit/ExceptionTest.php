@@ -1,6 +1,6 @@
 <?php
 
-namespace MAChitgarha\UnitTest\JSON;
+namespace MAChitgarha\UnitTest\JSONFile;
 
 use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JSONFile;
