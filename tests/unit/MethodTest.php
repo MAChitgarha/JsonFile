@@ -41,16 +41,26 @@ class MethodTest extends TestCase
 
     public function testSave()
     {
-        $appsJson = $this->loadJsonFile("empty");
-        $appsJson->set("apps.recent", [
+        $jsonFile = $this->loadJsonFile("empty");
+        $jsonFile->set("apps.recent", [
             "Terminal",
             "Settings",
             "Calculator"
         ]);
 
-        $appsJson->save();
+        $jsonFile->save();
 
         $this->assertEquals(3, $this->loadJsonFile("empty")->count("apps.recent"));
+
+        return $jsonFile;
+    }
+
+    public function testGetFileInfo(JSONFile $jsonFile)
+    {
+        $this->loadJsonFile("empty");
+
+        $this->assertContains("tests/data/empty.json", $jsonFile->getFilePath());
+        $this->assertEquals("empty.json", $jsonFile->getFilename());
     }
 
     protected function tearDown()
