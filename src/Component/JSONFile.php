@@ -23,10 +23,10 @@ class JSONFile extends JSON
     /** @var string */
     protected $filePath;
 
-    /** @var boolean {@see JSONFile::FILE_MUST_EXIST} */
+    /** @var bool {@see JSONFile::FILE_MUST_EXIST} */
     protected $fileMustExist = false;
 
-    /** @var boolean {@see JSONFile::OVERWRITE_INVALID_FILE} */
+    /** @var bool {@see JSONFile::OVERWRITE_INVALID_FILE} */
     protected $overwriteInvalidFile = false;
 
     /** @var int If it is set, the file must exist, otherwise it will throw an exception. */
@@ -49,8 +49,8 @@ class JSONFile extends JSON
     public function __construct(string $filePath, int $options = 0)
     {
         // Extract options
-        $this->fileMustExist = $options & self::FILE_MUST_EXIST;
-        $this->overwriteInvalidFile = $options & self::OVERWRITE_INVALID_FILE;
+        $this->fileMustExist = (bool)($options & self::FILE_MUST_EXIST);
+        $this->overwriteInvalidFile = (bool)($options & self::OVERWRITE_INVALID_FILE);
 
         $this->filePath = $filePath;
 
@@ -74,7 +74,7 @@ class JSONFile extends JSON
             parent::__construct($data);
         // The file doesn't contain an invalid JSON
         } catch (\InvalidArgumentException $e) {
-            if (!$this->ignoreInvalidFile)
+            if (!$this->overwriteInvalidFile)
                 throw new \Exception("File does not contain a valid JSON");
             parent::__construct();
         }
