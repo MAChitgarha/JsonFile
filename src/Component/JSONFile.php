@@ -14,7 +14,7 @@ use Webmozart\PathUtil\Path;
 /**
  * Handles JSON files.
  * 
- * Reads a JSON file, makes some changes to the data and saves it.
+ * Reads a JSON file, make some operations on it and saves it.
  * 
  * @todo Import the link of the GitHub Wiki.
  */
