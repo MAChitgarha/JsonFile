@@ -8,15 +8,15 @@ class JSONFile extends JSON
 {
     protected $filePath;
     protected $fileMustExist = false;
-    protected $ignoreInvalidFile = false;
+    protected $overwriteInvalidFile = false;
 
     const FILE_MUST_EXIST = 1;
-    const IGNORE_INVALID_FILE = 2;
+    const OVERWRITE_INVALID_FILE = 2;
 
     public function __construct(string $filePath, int $options = 0)
     {
         $this->fileMustExist = $options & self::FILE_MUST_EXIST;
-        $this->ignoreInvalidFile = $options & self::IGNORE_INVALID_FILE;
+        $this->overwriteInvalidFile = $options & self::OVERWRITE_INVALID_FILE;
 
         $this->filePath = $filePath;
 
