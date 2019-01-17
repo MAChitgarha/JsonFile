@@ -1,11 +1,11 @@
 <?php
-/** 
+/**
  * Unit tests for MAChitgarha\Component\JSONFile class.
  *
  * Go to the project's root and run the tests in this way:
  * phpunit --bootstrap vendor/autoload.php tests/unit
  * Using the --repeat option is recommended.
- * 
+ *
  * @see MAChitgarha\Component\JSONFile
  */
 

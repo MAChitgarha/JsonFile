@@ -1,11 +1,11 @@
 <?php
-/** 
+/**
  * Unit tests for MAChitgarha\Component\JSONFile class.
  *
  * Go to the project's root and run the tests in this way:
  * phpunit --bootstrap vendor/autoload.php tests/unit
  * Using the --repeat option is recommended.
- * 
+ *
  * @see MAChitgarha\Component\JSONFile
  */
 
@@ -29,7 +29,7 @@ class MethodTest extends TestCase
 
     /**
      * Prepare $this->files.
-     * 
+     *
      * Set 'files' property to contain an array consisting JSON files' data to be used in tests.
      * The index is the file's name without its extension, e.g., if the filename is 'empty.json',
      * then the index of its data would be 'empty'.
@@ -102,7 +102,8 @@ class MethodTest extends TestCase
      */
     protected function tearDown()
     {
-        foreach ($this->files as $file)
+        foreach ($this->files as $file) {
             file_put_contents($file["path"], new JSON($file["contents"]));
+        }
     }
 }

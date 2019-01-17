@@ -1,7 +1,7 @@
 <?php
 /**
  * JSONFile class file.
- * 
+ *
  * @author Mohammad Amin Chitgarha <machitgarha@outlook.com>
  * @see https://github.com/MAChitgarha/JSONFile
  * @todo Add link to the packagist.
@@ -13,9 +13,9 @@ use Webmozart\PathUtil\Path;
 
 /**
  * Handles JSON files.
- * 
+ *
  * Reads a JSON file, make some operations on it and saves it.
- * 
+ *
  * @todo Import the link of the GitHub Wiki.
  */
 class JSONFile extends JSON
@@ -36,7 +36,7 @@ class JSONFile extends JSON
 
     /**
      * Reads the JSON file data.
-     * 
+     *
      * The default behavior (to override these settings, use options argument):
      * If the file doesn't exist, it will create.
      * If the file contains invalid JSON data, then it will throw an exception.
@@ -58,7 +58,7 @@ class JSONFile extends JSON
         // Read the file
         try {
             $data = $this->read();
-        // The file doesn't exist
+            // The file doesn't exist
         } catch (\Exception $e) {
             if ($this->fileMustExist) {
                 throw $e;
@@ -69,13 +69,15 @@ class JSONFile extends JSON
 
         try {
             // If the file is empty, set data to an empty array
-            if ($data === "")
+            if ($data === "") {
                 $data = [];
+            }
             parent::__construct($data);
-        // The file doesn't contain an invalid JSON
+            // The file doesn't contain an invalid JSON
         } catch (\InvalidArgumentException $e) {
-            if (!$this->overwriteInvalidFile)
+            if (!$this->overwriteInvalidFile) {
                 throw new \Exception("File does not contain a valid JSON");
+            }
             parent::__construct();
         }
     }
@@ -89,10 +91,12 @@ class JSONFile extends JSON
      */
     protected function read()
     {
-        if (!file_exists($this->filePath))
+        if (!file_exists($this->filePath)) {
             throw new \Exception("File doesn't exist");
-        if (!is_readable($this->filePath))
+        }
+        if (!is_readable($this->filePath)) {
             throw new \Exception("File is not readable");
+        }
 
         return file_get_contents($this->filePath);
     }
@@ -105,10 +109,12 @@ class JSONFile extends JSON
      */
     protected function write(string $data)
     {
-        if (!file_exists($this->filePath))
+        if (!file_exists($this->filePath)) {
             throw new \Exception("File doesn't exist");
-        if (!is_writable($this->filePath))
+        }
+        if (!is_writable($this->filePath)) {
             throw new \Exception("File is not readable");
+        }
 
         // Write to the file
         $bytesWritten = @file_put_contents($this->filePath, $data);
@@ -135,8 +141,9 @@ class JSONFile extends JSON
      */
     protected function create()
     {
-        if (!@touch($this->filePath))
+        if (!@touch($this->filePath)) {
             throw new \Exception("Cannot create the file");
+        }
         return true;
     }
 
