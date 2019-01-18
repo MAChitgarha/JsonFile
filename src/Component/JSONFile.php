@@ -26,13 +26,13 @@ class JSONFile extends JSON
     /** @var bool {@see JSONFile::FILE_MUST_EXIST} */
     protected $fileMustExist = false;
 
-    /** @var bool {@see JSONFile::OVERWRITE_INVALID_FILE} */
-    protected $overwriteInvalidFile = false;
+    /** @var bool {@see JSONFile::IGNORE_INVALID_FILE} */
+    protected $ignoreInvalidFile = false;
 
     /** @var int If it is set, the file must exist, otherwise it will throw an exception. */
     const FILE_MUST_EXIST = 1;
     /** @var int If it is set, the file will be overwritten with an empty array when it contains invalid JSON data (e.g. {""}). */
-    const OVERWRITE_INVALID_FILE = 2;
+    const IGNORE_INVALID_FILE = 2;
 
     /**
      * Reads the JSON file data.
@@ -42,15 +42,15 @@ class JSONFile extends JSON
      * If the file contains invalid JSON data, then it will throw an exception.
      *
      * @param string $filePath File path to be read.
-     * @param integer $options Available options: FILE_MUST_EXIST, OVERWRITE_INVALID_FILE
+     * @param integer $options Available options: FILE_MUST_EXIST, IGNORE_INVALID_FILE
      * @throws \Exception When the file doesn't exist and FILE_MUST_EXIST is on.
-     * @throws \Exception When the file contains invalid JSON and OVERWRITE_INVALID_FILE is off.
+     * @throws \Exception When the file contains invalid JSON and IGNORE_INVALID_FILE is off.
      */
     public function __construct(string $filePath, int $options = 0)
     {
         // Extract options
         $this->fileMustExist = (bool)($options & self::FILE_MUST_EXIST);
-        $this->overwriteInvalidFile = (bool)($options & self::OVERWRITE_INVALID_FILE);
+        $this->ignoreInvalidFile = (bool)($options & self::IGNORE_INVALID_FILE);
 
         $this->filePath = $filePath;
 
@@ -75,7 +75,7 @@ class JSONFile extends JSON
             parent::__construct($data);
             // The file doesn't contain an invalid JSON
         } catch (\InvalidArgumentException $e) {
-            if (!$this->overwriteInvalidFile) {
+            if (!$this->ignoreInvalidFile) {
                 throw new \Exception("File does not contain a valid JSON");
             }
             parent::__construct();
