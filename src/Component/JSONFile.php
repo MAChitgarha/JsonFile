@@ -29,9 +29,9 @@ class JSONFile extends JSON
     /** @var bool {@see JSONFile::IGNORE_INVALID_FILE} */
     protected $ignoreInvalidFile = false;
 
-    /** @var int If it is set, the file must exist, otherwise it will throw an exception. */
+    /** @var int Forces the file to be exist, otherwise it will throw an exception. */
     const FILE_MUST_EXIST = 1;
-    /** @var int If it is set, the file will be overwritten with an empty array when it contains invalid JSON data (e.g. {""}). */
+    /** @var int Ignore invalid JSON data in the file, and set data to an empty array. */
     const IGNORE_INVALID_FILE = 2;
 
     /**
