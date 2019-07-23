@@ -71,11 +71,11 @@ class MethodTest extends TestCase
     public function testSave()
     {
         $jsonFile = $this->loadJsonFile("empty");
-        $jsonFile->set("apps.recent", [
+        $jsonFile->set([
             "Terminal",
             "Settings",
             "Calculator"
-        ]);
+        ], "apps.recent");
 
         $jsonFile->save();
 
