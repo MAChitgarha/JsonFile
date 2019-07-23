@@ -130,7 +130,7 @@ class JSONFile extends Json
      */
     public function save(int $options = JSON_PRETTY_PRINT)
     {
-        return $this->write($this->getDataAsJson($options));
+        return $this->write($this->getAsJson($options));
     }
 
     /**
