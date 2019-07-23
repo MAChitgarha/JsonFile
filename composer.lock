@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "620e40c583c8496750f9b72937ebdb9f",
+    "content-hash": "1ce4a28156ea9978a72446f432bc8140",
     "packages": [
         {
             "name": "machitgarha/json",
-            "version": "0.3.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/MAChitgarha/JSON.git",
-                "reference": "62d1e081927feb53fc33ea7700e24f47cbbfee53"
+                "url": "https://github.com/MAChitgarha/Json.git",
+                "reference": "1a14f9049165de02ec4c46bb85867b006e3e81e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MAChitgarha/JSON/zipball/62d1e081927feb53fc33ea7700e24f47cbbfee53",
-                "reference": "62d1e081927feb53fc33ea7700e24f47cbbfee53",
+                "url": "https://api.github.com/repos/MAChitgarha/Json/zipball/1a14f9049165de02ec4c46bb85867b006e3e81e9",
+                "reference": "1a14f9049165de02ec4c46bb85867b006e3e81e9",
                 "shasum": ""
             },
             "require": {
@@ -25,12 +25,18 @@
                 "php": "^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.4"
+                "friendsofphp/php-cs-fixer": "^2.15",
+                "phan/phan": "^2.2",
+                "phpunit/phpunit": "7.*"
+            },
+            "suggest": {
+                "machitgarha/json-file": "Handles your JSON files"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "MAChitgarha\\": "src"
+                    "MAChitgarha\\": "src",
+                    "MAChitgarha\\Json\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -40,20 +46,23 @@
             "authors": [
                 {
                     "name": "Mohammad Amin Chitgarha",
+                    "role": "Creator",
                     "email": "machitgarha@outlook.com",
-                    "homepage": "https://github.com/machitgarha",
-                    "role": "Creator"
+                    "homepage": "https://github.com/MAChitgarha"
                 }
             ],
-            "description": "Manages your JSON data easily",
-            "homepage": "https://github.com/machitgarha/json",
+            "description": "A package for handling JSON data, focusing on performance",
+            "homepage": "https://github.com/MAChitgarha/Json",
             "keywords": [
                 "PHP7",
                 "array",
+                "fast",
                 "json",
-                "object"
+                "object",
+                "performance",
+                "speed"
             ],
-            "time": "2019-01-10T17:24:11+00:00"
+            "time": "2019-07-23T10:13:45+00:00"
         }
     ],
     "packages-dev": [
@@ -799,8 +808,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "The PHP Unit Testing framework.",

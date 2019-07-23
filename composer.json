@@ -20,9 +20,8 @@
     "readme": "README.md",
     "require": {
         "php": "^7.0",
-        "machitgarha/json": "^0.3"
+        "machitgarha/json": "^1.0"
     },
-    "suggest": {},
     "autoload": {
         "psr-4": {
             "MAChitgarha\\": "src"
