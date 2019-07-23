@@ -18,7 +18,7 @@ use Webmozart\PathUtil\Path;
  *
  * @todo Import the link of the GitHub Wiki.
  */
-class JSONFile extends JSON
+class JSONFile extends Json
 {
     /** @var string */
     protected $filePath;
