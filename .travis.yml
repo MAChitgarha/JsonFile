@@ -1,0 +1,14 @@
+dist: bionic
+language: php
+
+php:
+  - 7.3
+
+before_install:
+  - pecl install ast
+install:
+  - composer install
+
+before_script: none
+script:
+  - ./vendor/bin/phan
