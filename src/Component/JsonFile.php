@@ -1,9 +1,9 @@
 <?php
 /**
- * JSONFile class file.
+ * JsonFile class file.
  *
  * @author Mohammad Amin Chitgarha <machitgarha@outlook.com>
- * @see https://github.com/MAChitgarha/JSONFile
+ * @see https://github.com/MAChitgarha/JsonFile
  * @todo Add link to the packagist.
  */
 
@@ -18,15 +18,15 @@ use Webmozart\PathUtil\Path;
  *
  * @todo Import the link of the GitHub Wiki.
  */
-class JSONFile extends JSON
+class JsonFile extends JSON
 {
     /** @var string */
     protected $filePath;
 
-    /** @var bool {@see JSONFile::FILE_MUST_EXIST} */
+    /** @var bool {@see JsonFile::FILE_MUST_EXIST} */
     protected $fileMustExist = false;
 
-    /** @var bool {@see JSONFile::IGNORE_INVALID_FILE} */
+    /** @var bool {@see JsonFile::IGNORE_INVALID_FILE} */
     protected $ignoreInvalidFile = false;
 
     /** @var int Forces the file to be exist, otherwise it will throw an exception. */
