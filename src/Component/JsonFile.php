@@ -10,6 +10,8 @@
 namespace MAChitgarha\Component;
 
 use Webmozart\PathUtil\Path;
+use MAChitgarha\Json\Exception\Exception;
+use MAChitgarha\Json\Exception\InvalidArgumentException;
 
 /**
  * Handles JSON files.
@@ -43,8 +45,8 @@ class JsonFile extends Json
      *
      * @param string $filePath File path to be read.
      * @param integer $options Available options: FILE_MUST_EXIST, IGNORE_INVALID_FILE
-     * @throws \Exception When the file doesn't exist and FILE_MUST_EXIST is on.
-     * @throws \Exception When the file contains invalid JSON and IGNORE_INVALID_FILE is off.
+     * @throws Exception When the file doesn't exist and FILE_MUST_EXIST is on.
+     * @throws Exception When the file contains invalid JSON and IGNORE_INVALID_FILE is off.
      */
     public function __construct(string $filePath, int $options = 0)
     {
@@ -59,7 +61,7 @@ class JsonFile extends Json
         try {
             $data = $this->read();
             // The file doesn't exist
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($this->fileMustExist) {
                 throw $e;
             } else {
@@ -74,9 +76,9 @@ class JsonFile extends Json
             }
             parent::__construct($data);
             // The file doesn't contain an invalid JSON
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             if (!$this->ignoreInvalidFile) {
-                throw new \Exception("File does not contain a valid JSON");
+                throw new Exception("File does not contain a valid JSON");
             }
             parent::__construct();
         }
@@ -86,16 +88,16 @@ class JsonFile extends Json
      * Reads from the file.
      *
      * @return string File contents.
-     * @throws \Exception When the file doesn't exist.
-     * @throws \Exception When the file isn't readable (e.g. permission denied).
+     * @throws Exception When the file doesn't exist.
+     * @throws Exception When the file isn't readable (e.g. permission denied).
      */
     protected function read()
     {
         if (!file_exists($this->filePath)) {
-            throw new \Exception("File doesn't exist");
+            throw new Exception("File doesn't exist");
         }
         if (!is_readable($this->filePath)) {
-            throw new \Exception("File is not readable");
+            throw new Exception("File is not readable");
         }
 
         return file_get_contents($this->filePath);
@@ -110,10 +112,10 @@ class JsonFile extends Json
     protected function write(string $data)
     {
         if (!file_exists($this->filePath)) {
-            throw new \Exception("File doesn't exist");
+            throw new Exception("File doesn't exist");
         }
         if (!is_writable($this->filePath)) {
-            throw new \Exception("File is not readable");
+            throw new Exception("File is not readable");
         }
 
         // Write to the file
@@ -137,12 +139,12 @@ class JsonFile extends Json
      * Creates the file.
      *
      * @return true
-     * @throws \Exception If the file cannot be created.
+     * @throws Exception If the file cannot be created.
      */
     protected function create()
     {
         if (!@touch($this->filePath)) {
-            throw new \Exception("Cannot create the file");
+            throw new Exception("Cannot create the file");
         }
         return true;
     }
