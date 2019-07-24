@@ -13,4 +13,4 @@ before_script: skip
 script:
   - ./vendor/bin/phan
   - ./vendor/bin/phpunit
-  - ./vendor/bin/php-cs-fixer . --dry-run
+  - ./vendor/bin/php-cs-fixer fix . --dry-run
