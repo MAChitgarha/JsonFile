@@ -1,18 +1,18 @@
 <?php
 /**
- * Unit tests for MAChitgarha\Component\JSONFile class.
+ * Unit tests for MAChitgarha\Component\JsonFile class.
  *
  * Go to the project's root and run the tests in this way:
  * phpunit --bootstrap vendor/autoload.php tests/unit
  * Using the --repeat option is recommended.
  *
- * @see MAChitgarha\Component\JSONFile
+ * @see MAChitgarha\Component\JsonFile
  */
 
-namespace MAChitgarha\UnitTest\JSONFile;
+namespace MAChitgarha\UnitTest\JsonFile;
 
 use PHPUnit\Framework\TestCase;
-use MAChitgarha\Component\JSONFile;
+use MAChitgarha\Component\JsonFile;
 use Webmozart\PathUtil\Path;
 use MAChitgarha\Component\JSON;
 
@@ -21,7 +21,7 @@ use MAChitgarha\Component\JSON;
  */
 class MethodTest extends TestCase
 {
-    /** @var string Prefix path for JSON files to be loaded by JSONFile class. */
+    /** @var string Prefix path for JSON files to be loaded by JsonFile class. */
     protected $filesPrefix = __DIR__ . "/../data/";
 
     /** @var string[] A set of JSON files to work with them. {@see self::setUp()} */
@@ -58,15 +58,15 @@ class MethodTest extends TestCase
     }
 
     /**
-     * Returns a JSONFile instance using one of the files in 'files' property.
+     * Returns a JsonFile instance using one of the files in 'files' property.
      */
     protected function loadJsonFile(string $filename)
     {
-        return new JSONFile($this->files[$filename]["path"]);
+        return new JsonFile($this->files[$filename]["path"]);
     }
 
     /**
-     * Tests JSONFile::save() method.
+     * Tests JsonFile::save() method.
      */
     public function testSave()
     {
@@ -84,7 +84,7 @@ class MethodTest extends TestCase
     }
 
     /**
-     * Tests JSONFile::getFilename() and JSONFile::getFilePath() methods.
+     * Tests JsonFile::getFilename() and JsonFile::getFilePath() methods.
      */
     public function testGetFileInfo()
     {
