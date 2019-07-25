@@ -39,7 +39,7 @@ class JsonFile extends Json
      * @param string $filePath File path to be read.
      * @param int $fileOptions A combination of FileOpt::* constants.
      * @param int $jsonOptions A combination of JsonOpt::* constants.
-     * @throws InvalidJsonException If the file does not contain a valid JSON data. 
+     * @throws InvalidJsonException If the file does not contain a valid JSON data.
      */
     public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
     {
