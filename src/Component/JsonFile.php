@@ -11,7 +11,8 @@ namespace MAChitgarha\Component;
 
 use Webmozart\PathUtil\Path;
 use MAChitgarha\Json\Exception\Exception;
-use MAChitgarha\Json\Exception\InvalidArgumentException;
+use MAChitgarha\Json\Exception\InvalidJsonException;
+use MAChitgarha\JsonFile\Option\FileOpt;
 
 /**
  * Handles JSON files.
@@ -24,17 +25,9 @@ class JsonFile extends Json
 {
     /** @var string */
     protected $filePath;
-
+    
     /** @var bool {@see JsonFile::FILE_MUST_EXIST} */
     protected $fileMustExist = false;
-
-    /** @var bool {@see JsonFile::IGNORE_INVALID_FILE} */
-    protected $ignoreInvalidFile = false;
-
-    /** @var int Forces the file to be exist, otherwise it will throw an exception. */
-    const FILE_MUST_EXIST = 1;
-    /** @var int Ignore invalid JSON data in the file, and set data to an empty array. */
-    const IGNORE_INVALID_FILE = 2;
 
     /**
      * Reads the JSON file data.
@@ -44,15 +37,15 @@ class JsonFile extends Json
      * If the file contains invalid JSON data, then it will throw an exception.
      *
      * @param string $filePath File path to be read.
-     * @param integer $options Available options: FILE_MUST_EXIST, IGNORE_INVALID_FILE
-     * @throws Exception When the file doesn't exist and FILE_MUST_EXIST is on.
-     * @throws Exception When the file contains invalid JSON and IGNORE_INVALID_FILE is off.
+     * @param int $fileOptions A combination of FileOpt::* constants.
+     * @param int $jsonOptions A combination of JsonOpt::* constants.
+     * @throws InvalidJsonException If the file does not contain a valid JSON data.
+     * @throws 
      */
-    public function __construct(string $filePath, int $options = 0)
+    public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
     {
-        // Extract options
-        $this->fileMustExist = (bool)($options & self::FILE_MUST_EXIST);
-        $this->ignoreInvalidFile = (bool)($options & self::IGNORE_INVALID_FILE);
+        // Setting options
+        $this->fileMustExist = (bool)($fileOptions & FileOpt::MUST_EXIST);
 
         $this->filePath = $filePath;
 
@@ -74,13 +67,10 @@ class JsonFile extends Json
             if ($data === "") {
                 $data = [];
             }
-            parent::__construct($data);
+            parent::__construct($data, $jsonOptions);
             // The file doesn't contain an invalid JSON
-        } catch (InvalidArgumentException $e) {
-            if (!$this->ignoreInvalidFile) {
-                throw new Exception("File does not contain a valid JSON");
-            }
-            parent::__construct();
+        } catch (InvalidJsonException $e) {
+            throw new InvalidJsonException("File does not contain a valid JSON");
         }
     }
 
