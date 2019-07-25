@@ -4,7 +4,7 @@
  *
  * @author Mohammad Amin Chitgarha <machitgarha@outlook.com>
  * @see https://github.com/MAChitgarha/JsonFile
- * @todo Add link to the packagist.
+ * @see https://packagist.org/machitgarha/jsonfile
  */
 
 namespace MAChitgarha\Component;
@@ -39,8 +39,7 @@ class JsonFile extends Json
      * @param string $filePath File path to be read.
      * @param int $fileOptions A combination of FileOpt::* constants.
      * @param int $jsonOptions A combination of JsonOpt::* constants.
-     * @throws InvalidJsonException If the file does not contain a valid JSON data.
-     * @throws 
+     * @throws InvalidJsonException If the file does not contain a valid JSON data. 
      */
     public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
     {
