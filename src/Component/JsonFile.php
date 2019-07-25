@@ -19,7 +19,7 @@ use MAChitgarha\JsonFile\Option\FileOpt;
  *
  * Reads a JSON file, make some operations on it and saves it.
  *
- * @todo Import the link of the GitHub Wiki.
+ * @see https://github.com/MAChitgarha/JsonFile/wiki
  */
 class JsonFile extends Json
 {
