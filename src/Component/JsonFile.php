@@ -32,15 +32,12 @@ class JsonFile extends Json
     /**
      * Reads the JSON file data.
      *
-     * The default behavior (to override these settings, use options argument):
-     * If the file doesn't exist, it will create.
-     * If the file contains invalid JSON data, then it will throw an exception.
+     * The file will be created if it does not exist.
      *
      * @param string $filePath File path to be read.
      * @param int $fileOptions A combination of FileOpt::* constants.
      * @param int $jsonOptions A combination of JsonOpt::* constants.
      * @throws InvalidJsonException If the file does not contain a valid JSON data.
-     * @throws 
      */
     public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
     {
@@ -81,36 +78,49 @@ class JsonFile extends Json
      * @throws Exception When the file doesn't exist.
      * @throws Exception When the file isn't readable (e.g. permission denied).
      */
-    protected function read()
+    protected function read(): string
     {
-        if (!file_exists($this->filePath)) {
+        $filePath = $this->filePath;
+
+        if (!file_exists($filePath)) {
             throw new Exception("File doesn't exist");
         }
-        if (!is_readable($this->filePath)) {
+        if (!is_readable($filePath)) {
             throw new Exception("File is not readable");
         }
 
-        return file_get_contents($this->filePath);
+        $file = new \SplFileObject($filePath, "r");
+        $contents = $file->fread($file->getSize());
+
+        if ($contents === false) {
+            throw new Exception("Cannot read $filePath");
+        }
+        return $contents;
     }
 
     /**
      * Writes to the file.
      *
      * @param string $data Data to be written.
-     * @return boolean If the data is written or not.
+     * @return bool If the data is written or not.
      */
     protected function write(string $data)
     {
-        if (!file_exists($this->filePath)) {
+        $filePath = $this->filePath;
+
+        if (!file_exists($filePath)) {
             throw new Exception("File doesn't exist");
         }
-        if (!is_writable($this->filePath)) {
+        if (!is_writable($filePath)) {
             throw new Exception("File is not readable");
         }
 
-        // Write to the file
-        $bytesWritten = @file_put_contents($this->filePath, $data);
+        $file = new \SplFileObject($filePath);
+        $bytesWritten = $file->fwrite($data);
 
+        if ($bytesWritten === false) {
+            throw new Exception("Cannot write to $filePath");
+        }
         return $bytesWritten === strlen($data);
     }
 
