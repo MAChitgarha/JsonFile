@@ -14,6 +14,7 @@ namespace MAChitgarha\UnitTest\JsonFile;
 use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JsonFile;
 use MAChitgarha\Json\Exception\Exception;
+use MAChitgarha\JsonFile\Option\FileOpt;
 
 /**
  * Expect \Exception in all of these tests.
@@ -30,7 +31,7 @@ class ExceptionTest extends TestCase
      */
     public function testConstructorOptions()
     {
-        new JsonFile(__DIR__ . "/data.json", JsonFile::FILE_MUST_EXIST);
+        new JsonFile(__DIR__ . "/data.json", FileOpt::MUST_EXIST);
         new JsonFile(__DIR__ . "/../data/bad-json.json");
     }
 }

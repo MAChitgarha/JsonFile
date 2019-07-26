@@ -24,7 +24,7 @@ class MethodTest extends TestCase
     /** @var string Prefix path for JSON files to be loaded by JsonFile class. */
     protected $filesPrefix = __DIR__ . "/../data/";
 
-    /** @var string[] A set of JSON files to work with them. {@see self::setUp()} */
+    /** @var array[] A set of JSON files to work with them. {@see self::setUp()} */
     protected $files = [];
 
     /**
