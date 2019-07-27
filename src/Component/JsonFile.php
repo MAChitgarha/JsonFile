@@ -10,9 +10,12 @@
 namespace MAChitgarha\Component;
 
 use Webmozart\PathUtil\Path;
+use MAChitgarha\JsonFile\Option\FileOpt;
 use MAChitgarha\Json\Exception\Exception;
 use MAChitgarha\Json\Exception\InvalidJsonException;
-use MAChitgarha\JsonFile\Option\FileOpt;
+use MAChitgarha\JsonFile\Exception\FileExistenceException;
+use MAChitgarha\JsonFile\Exception\FileReadingException;
+use MAChitgarha\JsonFile\Exception\FileWritingException;
 
 /**
  * Handles JSON files.
@@ -26,7 +29,7 @@ class JsonFile extends Json
     /** @var string */
     protected $filePath;
     
-    /** @var bool {@see JsonFile::MUST_EXIST} */
+    /** @var bool {@see FileOpt::MUST_EXIST} */
     protected $fileMustExist = false;
 
     /**
@@ -83,17 +86,17 @@ class JsonFile extends Json
         $filePath = $this->filePath;
 
         if (!file_exists($filePath)) {
-            throw new Exception("File doesn't exist");
-        }
-        if (!is_readable($filePath)) {
-            throw new Exception("File is not readable");
+            throw new FileExistenceException("File '$filePath' doesn't exist");
         }
 
         $file = new \SplFileObject($filePath, "r");
-        $contents = $file->fread($file->getSize());
+        if ($file->isReadable()) {
+            throw new FileReadingException("File '$filePath' is not readable");
+        }
 
+        $contents = $file->fread($file->getSize());
         if ($contents === false) {
-            throw new Exception("Cannot read $filePath");
+            throw new Exception("Cannot read file '$filePath'");
         }
         return $contents;
     }
@@ -109,17 +112,17 @@ class JsonFile extends Json
         $filePath = $this->filePath;
 
         if (!file_exists($filePath)) {
-            throw new Exception("File doesn't exist");
-        }
-        if (!is_writable($filePath)) {
-            throw new Exception("File is not readable");
+            throw new Exception("File '$filePath' doesn't exist");
         }
 
         $file = new \SplFileObject($filePath);
-        $bytesWritten = $file->fwrite($data);
+        if (!$file->isWritable()) {
+            throw new FileWritingException("File '$filePath' is not writable");
+        }
 
+        $bytesWritten = $file->fwrite($data);
         if ($bytesWritten === false) {
-            throw new Exception("Cannot write to $filePath");
+            throw new FileWritingException("Cannot write to file '$filePath'");
         }
         return $bytesWritten === strlen($data);
     }
