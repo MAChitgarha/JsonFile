@@ -115,7 +115,7 @@ class JsonFile extends Json
             throw new Exception("File '$filePath' doesn't exist");
         }
 
-        $file = new \SplFileObject($filePath);
+        $file = new \SplFileObject($filePath, "w");
         if (!$file->isWritable()) {
             throw new FileWritingException("File '$filePath' is not writable");
         }
