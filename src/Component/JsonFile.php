@@ -26,7 +26,7 @@ class JsonFile extends Json
     /** @var string */
     protected $filePath;
     
-    /** @var bool {@see JsonFile::FILE_MUST_EXIST} */
+    /** @var bool {@see JsonFile::MUST_EXIST} */
     protected $fileMustExist = false;
 
     /**
