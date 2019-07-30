@@ -140,4 +140,11 @@ class JsonFile extends Json
     {
         $this->fileHandler = null;
     }
+
+    public static function saveToFile($data, string $filePath, int $fileOptions = 0)
+    {
+        $jsonFile = new self($filePath, $fileOptions);
+        $jsonFile->set($data);
+        $jsonFile->save();
+    }
 }
