@@ -11,7 +11,6 @@ namespace MAChitgarha\Component;
 
 use Webmozart\PathUtil\Path;
 use MAChitgarha\JsonFile\Option\FileOpt;
-use MAChitgarha\Json\Exception\Exception;
 use MAChitgarha\Json\Exception\InvalidJsonException;
 use MAChitgarha\JsonFile\Exception\FileExistenceException;
 use MAChitgarha\JsonFile\Exception\FileReadingException;
