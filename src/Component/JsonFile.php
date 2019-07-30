@@ -112,7 +112,7 @@ class JsonFile extends Json
         $dataString = $this->getAsJson($options);
         $writtenBytes = $this->fileHandler->fwrite($dataString);
         if ($writtenBytes === false || strlen($writtenBytes) !== strlen($dataString)) {
-            throw new FileWritingException("Cannot write to the file '$filePath'");
+            throw new FileWritingException("Cannot write to file '$filePath'");
         }
     }
 
