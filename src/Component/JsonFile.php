@@ -111,8 +111,11 @@ class JsonFile extends Json
             throw new FileWritingException("File '$filePath' is not writable");
         }
 
-        $dataString = $this->getAsJson($options);
-        $writtenBytes = $this->fileHandler->fwrite($dataString);
+        // Making the file empty
+        $this->fileHandler->ftruncate(0);
+        $this->fileHandler->rewind();
+
+        $writtenBytes = $this->fileHandler->fwrite($dataString = $this->getAsJson($options));
         if ($writtenBytes === null || $writtenBytes !== strlen($dataString)) {
             throw new FileWritingException("Cannot write to file '$filePath'");
         }
