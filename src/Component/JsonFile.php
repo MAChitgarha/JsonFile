@@ -16,6 +16,8 @@ use MAChitgarha\Json\Exception\InvalidJsonException;
 use MAChitgarha\JsonFile\Exception\FileExistenceException;
 use MAChitgarha\JsonFile\Exception\FileReadingException;
 use MAChitgarha\JsonFile\Exception\FileWritingException;
+use MAChitgarha\JsonFile\Exception\FileCreatingException;
+use SplFileInfo;
 
 /**
  * Handles JSON files.
@@ -28,6 +30,9 @@ class JsonFile extends Json
 {
     /** @var string */
     protected $filePath;
+
+    /** @var \SplFileObject File handler for reading and writing. */
+    protected $fileHandler;
     
     /** @var bool {@see FileOpt::MUST_EXIST} */
     protected $fileMustExist = false;
@@ -37,7 +42,7 @@ class JsonFile extends Json
      *
      * The file will be created if it does not exist.
      *
-     * @param string $filePath File path to be read.
+     * @param string $filePath
      * @param int $fileOptions A combination of FileOpt::* constants.
      * @param int $jsonOptions A combination of JsonOpt::* constants.
      * @throws InvalidJsonException If the file does not contain a valid JSON data.
@@ -49,28 +54,42 @@ class JsonFile extends Json
 
         $this->filePath = $filePath;
 
-        $data = "";
-        // Read the file
-        try {
-            $data = $this->read();
-            // The file doesn't exist
-        } catch (Exception $e) {
-            if ($this->fileMustExist) {
-                throw $e;
-            } else {
-                $this->create();
-            }
+        $this->createFileIfNotExists();
+
+        if (!is_readable($filePath)) {
+            throw new FileReadingException("File '$filePath' is not readable.");
+        }
+        
+        $fileHandler = new \SplFileObject($filePath, "r+");
+        $this->fileHandler = $fileHandler;
+
+        $data = $fileHandler->fread($fileHandler->getSize());
+        if ($data === "") {
+            $data = null;
         }
 
-        try {
-            // If the file is empty, set data to an empty array
-            if ($data === "") {
-                $data = [];
+        parent::__construct($data, $jsonOptions);
+    }
+
+    /**
+     * Creates a file if it does not exist, with handling FileOpt::MUST_EXIST option. 
+     *
+     * @return void
+     * @throws FileExistenceException
+     * @throws FileCreatingException
+     */
+    protected function createFileIfNotExists()
+    {
+        $filePath = $this->filePath;
+
+        if (!file_exists($filePath)) {
+            if ($this->fileMustExist) {
+                throw new FileExistenceException("File '$filePath' does not exist");
+            } else {
+                if (!@touch($filePath)) {
+                    throw new FileCreatingException("File '$filePath' cannot be created");
+                }
             }
-            parent::__construct($data, $jsonOptions);
-            // The file doesn't contain an invalid JSON
-        } catch (InvalidJsonException $e) {
-            throw new InvalidJsonException("File does not contain a valid JSON");
         }
     }
 
@@ -135,7 +154,18 @@ class JsonFile extends Json
      */
     public function save(int $options = JSON_PRETTY_PRINT)
     {
-        return $this->write($this->getAsJson($options));
+        $this->createFileIfNotExists();
+        $filePath = $this->filePath;
+        
+        if (!is_writable($filePath)) {
+            throw new FileWritingException("File '$filePath' is not writable");
+        }
+
+        $dataString = $this->getAsJson($options);
+        $writtenBytes = $this->fileHandler->fwrite($dataString);
+        if (strlen($writtenBytes) !== strlen($dataString)) {
+            throw new FileWritingException("Cannot write to the file '$filePath'");
+        }
     }
 
     /**
@@ -170,5 +200,10 @@ class JsonFile extends Json
     public function getFilePath()
     {
         return Path::canonicalize($this->filePath);
+    }
+
+    public function __destruct()
+    {
+        $this->fileHandler = null;
     }
 }
