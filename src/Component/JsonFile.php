@@ -17,7 +17,6 @@ use MAChitgarha\JsonFile\Exception\FileExistenceException;
 use MAChitgarha\JsonFile\Exception\FileReadingException;
 use MAChitgarha\JsonFile\Exception\FileWritingException;
 use MAChitgarha\JsonFile\Exception\FileCreatingException;
-use SplFileInfo;
 
 /**
  * Handles JSON files.
@@ -64,6 +63,9 @@ class JsonFile extends Json
         $this->fileHandler = $fileHandler;
 
         $data = $fileHandler->fread($fileHandler->getSize());
+        if ($data === false) {
+            throw new FileReadingException("Cannot read from file '$filePath'");
+        }
         if ($data === "") {
             $data = null;
         }
@@ -94,59 +96,6 @@ class JsonFile extends Json
     }
 
     /**
-     * Reads from the file.
-     *
-     * @return string File contents.
-     * @throws Exception When the file doesn't exist.
-     * @throws Exception When the file isn't readable (e.g. permission denied).
-     */
-    protected function read(): string
-    {
-        $filePath = $this->filePath;
-
-        if (!file_exists($filePath)) {
-            throw new FileExistenceException("File '$filePath' doesn't exist");
-        }
-
-        $file = new \SplFileObject($filePath, "r");
-        if ($file->isReadable()) {
-            throw new FileReadingException("File '$filePath' is not readable");
-        }
-
-        $contents = $file->fread($file->getSize());
-        if ($contents === false) {
-            throw new Exception("Cannot read file '$filePath'");
-        }
-        return $contents;
-    }
-
-    /**
-     * Writes to the file.
-     *
-     * @param string $data Data to be written.
-     * @return bool If the data is written or not.
-     */
-    protected function write(string $data)
-    {
-        $filePath = $this->filePath;
-
-        if (!file_exists($filePath)) {
-            throw new Exception("File '$filePath' doesn't exist");
-        }
-
-        $file = new \SplFileObject($filePath, "w");
-        if (!$file->isWritable()) {
-            throw new FileWritingException("File '$filePath' is not writable");
-        }
-
-        $bytesWritten = $file->fwrite($data);
-        if ($bytesWritten === false) {
-            throw new FileWritingException("Cannot write to file '$filePath'");
-        }
-        return $bytesWritten === strlen($data);
-    }
-
-    /**
      * Saves the data to the file.
      *
      * @param integer $options The options. {@link http://php.net/json.constants}
@@ -163,23 +112,9 @@ class JsonFile extends Json
 
         $dataString = $this->getAsJson($options);
         $writtenBytes = $this->fileHandler->fwrite($dataString);
-        if (strlen($writtenBytes) !== strlen($dataString)) {
+        if ($writtenBytes === false || strlen($writtenBytes) !== strlen($dataString)) {
             throw new FileWritingException("Cannot write to the file '$filePath'");
         }
-    }
-
-    /**
-     * Creates the file.
-     *
-     * @return true
-     * @throws Exception If the file cannot be created.
-     */
-    protected function create()
-    {
-        if (!@touch($this->filePath)) {
-            throw new Exception("Cannot create the file");
-        }
-        return true;
     }
 
     /**
