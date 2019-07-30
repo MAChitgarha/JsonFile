@@ -61,12 +61,14 @@ class JsonFile extends Json
         $fileHandler = new \SplFileObject($filePath, "r+");
         $this->fileHandler = $fileHandler;
 
-        $data = $fileHandler->fread($fileHandler->getSize());
-        if ($data === false) {
-            throw new FileReadingException("Cannot read from file '$filePath'");
-        }
-        if ($data === "") {
+        $fileSize = $fileHandler->getSize();
+        if ($fileSize === 0) {
             $data = null;
+        } else {
+            $data = $fileHandler->fread($fileSize);
+            if ($data === false) {
+                throw new FileReadingException("Cannot read from file '$filePath'");
+            }
         }
 
         parent::__construct($data, $jsonOptions);
@@ -111,7 +113,7 @@ class JsonFile extends Json
 
         $dataString = $this->getAsJson($options);
         $writtenBytes = $this->fileHandler->fwrite($dataString);
-        if ($writtenBytes === false || strlen($writtenBytes) !== strlen($dataString)) {
+        if ($writtenBytes === null || $writtenBytes !== strlen($dataString)) {
             throw new FileWritingException("Cannot write to file '$filePath'");
         }
     }
