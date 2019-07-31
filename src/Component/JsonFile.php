@@ -76,6 +76,11 @@ class JsonFile extends Json
         parent::__construct($data, $jsonOptions);
     }
 
+    public function new(string $filePath, int $fileOptions = 0, int $jsonOptions = 0): self
+    {
+        return new self($filePath, $fileOptions, $jsonOptions);
+    }
+
     public function setOptions(int $options = 0, string $optionType = self::class): self
     {
         if ($optionType === self::class) {
