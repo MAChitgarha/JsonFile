@@ -31,7 +31,10 @@ class JsonFile extends Json
 
     /** @var \SplFileObject File handler for reading and writing. */
     protected $fileHandler;
-    
+
+    /** @var int A combination of FileOpt::* options. */
+    protected $fileOptions;
+
     /** @var bool {@see FileOpt::MUST_EXIST} */
     protected $fileMustExist = false;
 
@@ -47,8 +50,7 @@ class JsonFile extends Json
      */
     public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
     {
-        // Setting options
-        $this->fileMustExist = (bool)($fileOptions & FileOpt::MUST_EXIST);
+        $this->setOptions($fileOptions);
 
         $this->filePath = $filePath;
 
@@ -72,6 +74,58 @@ class JsonFile extends Json
         }
 
         parent::__construct($data, $jsonOptions);
+    }
+
+    public function setOptions(int $options = 0, string $optionType = self::class): self
+    {
+        if ($optionType === self::class) {
+            $this->fileOptions = $options;
+            $this->fileMustExist = (bool)($options & FileOpt::MUST_EXIST);
+        } else {
+            parent::setOptions($options);
+        }
+        return $this;
+    }
+
+    public function addOption(int $option, string $optionType = self::class): self
+    {
+        if ($optionType === self::class) {
+            $this->setOptions($this->fileOptions | $option);
+        } else {
+            parent::addOption($option);
+        }
+        return $this;
+    }
+
+    /**
+     * Unsets an option.
+     *
+     * @param int $option
+     * @return self
+     */
+    public function removeOption(int $option, string $optionType = self::class): self
+    {
+        if ($optionType === self::class) {
+            $this->setOptions($this->fileOptions & ~$option);
+        } else {
+            parent::removeOption($option);
+        }
+        return $this;
+    }
+
+    /**
+     * Tells whether an option is set or not.
+     *
+     * @param int $option
+     * @return bool
+     */
+    public function isOptionSet(int $option, string $optionType = self::class): bool
+    {
+        if ($optionType === self::class) {
+            return ($this->fileOptions & $option) === $option;
+        } else {
+            return parent::isOptionSet($option);
+        }
     }
 
     /**
