@@ -59,7 +59,7 @@ class JsonFile extends Json
         if (!is_readable($filePath)) {
             throw new FileReadingException("File '$filePath' is not readable.");
         }
-        
+
         $fileHandler = new \SplFileObject($filePath, "r+");
         $this->fileHandler = $fileHandler;
 
@@ -134,7 +134,7 @@ class JsonFile extends Json
     }
 
     /**
-     * Creates a file if it does not exist, with handling FileOpt::MUST_EXIST option. 
+     * Creates a file if it does not exist, with handling FileOpt::MUST_EXIST option.
      *
      * @return void
      * @throws FileExistenceException
@@ -165,7 +165,7 @@ class JsonFile extends Json
     {
         $this->createFileIfNotExists();
         $filePath = $this->filePath;
-        
+
         if (!is_writable($filePath)) {
             throw new FileWritingException("File '$filePath' is not writable");
         }
