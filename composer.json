@@ -21,7 +21,8 @@
     "require": {
         "php": "^7.0",
         "machitgarha/json": "^1.0",
-        "webmozart/path-util": "^2.3"
+        "webmozart/path-util": "^2.3",
+        "league/flysystem": "^1.0"
     },
     "autoload": {
         "psr-4": {
