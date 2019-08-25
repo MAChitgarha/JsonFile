@@ -57,7 +57,7 @@ class JsonFile extends Json
         $this->createFileIfNotExists();
 
         if (!is_readable($filePath)) {
-            throw new FileReadingException("File '$filePath' is not readable.");
+            throw new FileReadingException("File '$filePath' is not readable");
         }
 
         $fileHandler = new \SplFileObject($filePath, "r+");
@@ -76,7 +76,7 @@ class JsonFile extends Json
         parent::__construct($data, $jsonOptions);
     }
 
-    public function new(string $filePath, int $fileOptions = 0, int $jsonOptions = 0): self
+    public static function new(string $filePath, int $fileOptions = 0, int $jsonOptions = 0): self
     {
         return new self($filePath, $fileOptions, $jsonOptions);
     }
