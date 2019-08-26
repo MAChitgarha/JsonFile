@@ -165,10 +165,10 @@ class JsonFile extends Json
     /**
      * Saves the data to the file.
      *
-     * @param integer $options The options. {@link http://php.net/json.constants}
-     * @return boolean If the saving was successful or not.
+     * @param int $options The options. {@link http://php.net/json.constants}
+     * @return self
      */
-    public function save(int $options = JSON_PRETTY_PRINT)
+    public function save(int $options = JSON_PRETTY_PRINT): self
     {
         $this->createFileIfNotExists();
         $filePath = $this->filePath;
@@ -185,6 +185,8 @@ class JsonFile extends Json
         if ($writtenBytes === null || $writtenBytes !== strlen($dataString)) {
             throw new FileWritingException("Cannot write to file '$filePath'");
         }
+
+        return $this;
     }
 
     /**
