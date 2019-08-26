@@ -61,6 +61,8 @@ class JsonFile extends Json
             throw new FileReadingException("File '$filePath' is not readable");
         }
 
+        clearstatcache();
+
         $fileHandler = new \SplFileObject($filePath, "r+");
         $this->fileHandler = $fileHandler;
 
