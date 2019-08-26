@@ -9,6 +9,7 @@
 
 namespace MAChitgarha\Component;
 
+use MAChitgarha\Json\Exception\InvalidArgumentException;
 use Webmozart\PathUtil\Path;
 use MAChitgarha\JsonFile\Option\FileOpt;
 use MAChitgarha\Json\Exception\InvalidJsonException;
@@ -78,6 +79,10 @@ class JsonFile extends Json
 
     public static function new($filePath = "", int $fileOptions = 0, int $jsonOptions = 0)
     {
+        if ($filePath === "") {
+            throw new InvalidArgumentException("File path cannot be empty");
+        }
+
         return new self($filePath, $fileOptions, $jsonOptions);
     }
 
