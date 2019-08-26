@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "754aeb20d69c8c1bd35341f286dc7e69",
+    "content-hash": "be3b82ff5675c81615591d1eefeffadc",
     "packages": [
         {
             "name": "machitgarha/json",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MAChitgarha/Json.git",
-                "reference": "610534a0666dd3ef399c6b1f6e62c6f5c6993427"
+                "reference": "51b0a9ddbd8abeffa716fb8414f18f70c729f739"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MAChitgarha/Json/zipball/610534a0666dd3ef399c6b1f6e62c6f5c6993427",
-                "reference": "610534a0666dd3ef399c6b1f6e62c6f5c6993427",
+                "url": "https://api.github.com/repos/MAChitgarha/Json/zipball/51b0a9ddbd8abeffa716fb8414f18f70c729f739",
+                "reference": "51b0a9ddbd8abeffa716fb8414f18f70c729f739",
                 "shasum": ""
             },
             "require": {
@@ -62,7 +62,7 @@
                 "performance",
                 "speed"
             ],
-            "time": "2019-08-25T19:05:11+00:00"
+            "time": "2019-08-26T18:17:17+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
