@@ -30,7 +30,7 @@ class JsonFile extends Json
     /** @var string */
     protected $filePath;
 
-    /** @var \SplFileObject File handler for reading and writing. */
+    /** @var ?\SplFileObject File handler for reading and writing. */
     protected $fileHandler;
 
     /** @var int A combination of FileOpt::* options. */
