@@ -76,12 +76,12 @@ class JsonFile extends Json
         parent::__construct($data, $jsonOptions);
     }
 
-    public static function new(string $filePath, int $fileOptions = 0, int $jsonOptions = 0): self
+    public static function new($filePath = "", int $fileOptions = 0, int $jsonOptions = 0)
     {
         return new self($filePath, $fileOptions, $jsonOptions);
     }
 
-    public function setOptions(int $options = 0, string $optionType = self::class): self
+    public function setOptions(int $options = 0, string $optionType = self::class)
     {
         if ($optionType === self::class) {
             $this->fileOptions = $options;
@@ -92,7 +92,7 @@ class JsonFile extends Json
         return $this;
     }
 
-    public function addOption(int $option, string $optionType = self::class): self
+    public function addOption(int $option, string $optionType = self::class)
     {
         if ($optionType === self::class) {
             $this->setOptions($this->fileOptions | $option);
@@ -108,7 +108,7 @@ class JsonFile extends Json
      * @param int $option
      * @return self
      */
-    public function removeOption(int $option, string $optionType = self::class): self
+    public function removeOption(int $option, string $optionType = self::class)
     {
         if ($optionType === self::class) {
             $this->setOptions($this->fileOptions & ~$option);
