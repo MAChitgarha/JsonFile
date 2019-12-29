@@ -249,13 +249,21 @@ class JsonFile extends Json
         return $data;
     }
 
+    /**
+     * Writes data to the specified file.
+     *
+     * @param SplFileObject $fileHandler
+     * @param string $data Data to be written.
+     * @param bool $readOnly Whether or not the file is read-only.
+     * @return void
+     */
     protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly)
     {
-        self::ensureWritable($filePath = $fileHandler->getPathname());
-
         if ($readOnly) {
-            throw new FileWritingException("File is opened read-only");
+            throw new FileWritingException("File is read-only");
         }
+
+        self::ensureWritable($filePath = $fileHandler->getPathname());
 
         // Making the file empty
         $fileHandler->ftruncate(0);
