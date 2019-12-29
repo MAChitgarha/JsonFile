@@ -10,4 +10,10 @@ class FileOpt
 {
     /** @var int Forces the file to be exist. Otherwise, an exception will be thrown. */
     const MUST_EXIST = 1;
+
+    /**
+     * @var int Opens the file as read only (i.e. cannot save changes to the file).
+     * This option cannot be changed after instantiation.
+     */
+    const READ_ONLY = 2;
 }

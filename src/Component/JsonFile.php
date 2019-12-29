@@ -36,6 +36,8 @@ class JsonFile extends Json
 
     /** @var bool {@see FileOpt::MUST_EXIST} */
     protected $fileMustExist = false;
+    /** @var bool {@see FileOpt::READ_ONLY} (Settable only via constructor) */
+    protected $readOnly = false;
 
     /** @var int {@see self::save()} */
     public static $defaultSaveOptions = JSON_PRETTY_PRINT;
@@ -61,7 +63,8 @@ class JsonFile extends Json
 
         clearstatcache();
 
-        $fileHandler = new \SplFileObject($filePath, "r+");
+        $this->readOnly = (bool)($fileOptions & FileOpt::READ_ONLY);
+        $fileHandler = new \SplFileObject($filePath, $this->readOnly ? "r" : "r+");
         $this->fileHandler = $fileHandler;
 
         $fileSize = $fileHandler->getSize();
@@ -197,6 +200,10 @@ class JsonFile extends Json
      */
     public function save(int $options = null): self
     {
+        if ($this->readOnly) {
+            throw new FileWritingException("File is opened as read-only");
+        }
+
         if ($options === null) {
             $options = self::$defaultSaveOptions;
         }
