@@ -230,6 +230,23 @@ class JsonFile extends Json
         return $data;
     }
 
+    protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly)
+    {
+        if ($readOnly) {
+            throw new FileWritingException("File is opened read-only");
+        }
+
+        // Making the file empty
+        $this->fileHandler->ftruncate(0);
+        $this->fileHandler->rewind();
+
+        $writtenBytes = $this->fileHandler->fwrite($data);
+        if ($writtenBytes === null || $writtenBytes !== strlen($data)) {
+            $filePath = $fileHandler->getPathname();
+            throw new FileWritingException("Cannot write to file '$filePath'");
+        }
+    }
+
     /**
      * Saves current data to the file.
      *
@@ -245,20 +262,7 @@ class JsonFile extends Json
         }
 
         self::createIfNeeded($this->filePath, $this->fileMustExist);
-        $filePath = $this->filePath;
-
-        if (!is_writable($filePath)) {
-            throw new FileWritingException("File '$filePath' is not writable");
-        }
-
-        // Making the file empty
-        $this->fileHandler->ftruncate(0);
-        $this->fileHandler->rewind();
-
-        $writtenBytes = $this->fileHandler->fwrite($dataString = $this->getAsJson($options));
-        if ($writtenBytes === null || $writtenBytes !== strlen($dataString)) {
-            throw new FileWritingException("Cannot write to file '$filePath'");
-        }
+        self::write($this->fileHandler, $this->getAsJson($options), $this->readOnly);
 
         return $this;
     }
