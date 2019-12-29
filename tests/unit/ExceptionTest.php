@@ -21,7 +21,7 @@ use MAChitgarha\JsonFile\Option\FileOpt;
  */
 class ExceptionTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->expectException(Exception::class);
     }

@@ -37,7 +37,7 @@ class MethodTest extends TestCase
      * path: specifies the path of the JSON file,
      * contents: the default file contents. {@see self::tearDown()}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $fileData = [
             [
@@ -90,7 +90,7 @@ class MethodTest extends TestCase
     {
         $jsonFile = $this->loadJsonFile("empty");
 
-        $this->assertContains("tests/data/empty.json", $jsonFile->getFilePath());
+        $this->assertStringContainsString("tests/data/empty.json", $jsonFile->getFilePath());
         $this->assertEquals("empty.json", $jsonFile->getFilename());
     }
 
@@ -100,7 +100,7 @@ class MethodTest extends TestCase
      * Resets all JSON files that has been changed during tests to their default contents for future
      * tests.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->files as $file) {
             file_put_contents($file["path"], new JSON($file["contents"]));
