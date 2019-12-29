@@ -237,10 +237,10 @@ class JsonFile extends Json
         }
 
         // Making the file empty
-        $this->fileHandler->ftruncate(0);
-        $this->fileHandler->rewind();
+        $fileHandler->ftruncate(0);
+        $fileHandler->rewind();
 
-        $writtenBytes = $this->fileHandler->fwrite($data);
+        $writtenBytes = $fileHandler->fwrite($data);
         if ($writtenBytes === null || $writtenBytes !== strlen($data)) {
             $filePath = $fileHandler->getPathname();
             throw new FileWritingException("Cannot write to file '$filePath'");
