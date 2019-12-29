@@ -27,7 +27,7 @@
         "psr-4": {
             "MAChitgarha\\": "src/",
             "MAChitgarha\\JsonFile\\": "src/",
-            "MAChitgarha\\UnitTest": "tests/unit/"
+            "MAChitgarha\\UnitTest\\JsonFile\\": "tests/unit/"
         }
     },
     "type": "library",
