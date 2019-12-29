@@ -77,18 +77,12 @@ class JsonFile extends Json
     /**
      * Creates a new JsonFile instance.
      *
-     * @param string $filePath The file path to be opened. By default, the file will be created if
-     * it does not exist.
-     * @param int $fileOptions A combination of FileOpt::* constants.
-     * @param int $jsonOptions A combination of JsonOpt::* constants.
-     * @throws InvalidJsonException If the file does not contain a valid JSON data.
-     * @throws FileReadingException
-     * @return self
+     * @see JsonFile::__construct()
      */
-    public static function new($filePath = "", int $fileOptions = 0, int $jsonOptions = 0): self
+    public static function new($filePath = null, int $fileOptions = 0, int $jsonOptions = 0): self
     {
-        if ($filePath === "") {
-            throw new InvalidArgumentException("File path cannot be empty");
+        if ($filePath === null) {
+            throw new InvalidArgumentException("File path must be set");
         }
         return new self($filePath, $fileOptions, $jsonOptions);
     }

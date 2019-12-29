@@ -5,7 +5,7 @@ namespace MAChitgarha\UnitTest\JsonFile;
 
 class File
 {
-    private const dataPath = __DIR__ . "/../data";
+    public const dataPath = __DIR__ . "/../data";
     public const testFile = self::dataPath . "/test.json";
     public const testDir = self::dataPath . "/test";
     public const emptyJsonFile = self::dataPath . "/empty.json";

@@ -6,7 +6,6 @@ namespace MAChitgarha\UnitTest\JsonFile;
 use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JsonFile;
 use MAChitgarha\JsonFile\Exception\FileCreatingException;
-use MAChitgarha\JsonFile\Option\FileOpt;
 use Webmozart\PathUtil\Path;
 
 class FileCreatingExceptionTest extends TestCase
@@ -27,6 +26,18 @@ class FileCreatingExceptionTest extends TestCase
 
         // Act
         new JsonFile(Path::join($dirPath, $fileName));
+
+        // Assert
+        // ...
+    }
+
+    public function testEmptyFilePath()
+    {
+        // Arrange
+        // ...
+
+        // Act
+        new JsonFile("");
 
         // Assert
         // ...
