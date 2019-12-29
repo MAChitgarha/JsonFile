@@ -21,8 +21,6 @@ use MAChitgarha\JsonFile\Exception\FileCreatingException;
 /**
  * Handles JSON files.
  *
- * Reads a JSON file, make some operations on it and saves it.
- *
  * @see https://github.com/MAChitgarha/JsonFile/wiki
  */
 class JsonFile extends Json
@@ -39,23 +37,23 @@ class JsonFile extends Json
     /** @var bool {@see FileOpt::MUST_EXIST} */
     protected $fileMustExist = false;
 
+    /** @var int {@see self::save()} */
+    public static $defaultSaveOptions = JSON_PRETTY_PRINT;
+
     /**
-     * Reads the JSON file data.
-     *
-     * The file will be created if it does not exist.
-     *
-     * @param string $filePath
+     * @param string $filePath The file path to be opened. By default, the file will be created if
+     * it does not exist.
      * @param int $fileOptions A combination of FileOpt::* constants.
      * @param int $jsonOptions A combination of JsonOpt::* constants.
      * @throws InvalidJsonException If the file does not contain a valid JSON data.
+     * @throws FileReadingException
      */
     public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
     {
         $this->setOptions($fileOptions);
-
         $this->filePath = $filePath;
 
-        $this->createFileIfNotExists();
+        $this->createFileIfNeeded();
 
         if (!is_readable($filePath)) {
             throw new FileReadingException("File '$filePath' is not readable");
@@ -79,7 +77,18 @@ class JsonFile extends Json
         parent::__construct($data, $jsonOptions);
     }
 
-    public static function new($filePath = "", int $fileOptions = 0, int $jsonOptions = 0)
+    /**
+     * Creates a new JsonFile instance.
+     *
+     * @param string $filePath The file path to be opened. By default, the file will be created if
+     * it does not exist.
+     * @param int $fileOptions A combination of FileOpt::* constants.
+     * @param int $jsonOptions A combination of JsonOpt::* constants.
+     * @throws InvalidJsonException If the file does not contain a valid JSON data.
+     * @throws FileReadingException
+     * @return self
+     */
+    public static function new($filePath = "", int $fileOptions = 0, int $jsonOptions = 0): self
     {
         if ($filePath === "") {
             throw new InvalidArgumentException("File path cannot be empty");
@@ -88,7 +97,14 @@ class JsonFile extends Json
         return new self($filePath, $fileOptions, $jsonOptions);
     }
 
-    public function setOptions(int $options = 0, string $optionType = self::class)
+    /**
+     * Resets all options.
+     *
+     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
+     * @param string $optionType Specifies what the options belong to. Should be a class name.
+     * @return self
+     */
+    public function setOptions(int $options = 0, string $optionType = self::class): self
     {
         if ($optionType === self::class) {
             $this->fileOptions = $options;
@@ -99,7 +115,14 @@ class JsonFile extends Json
         return $this;
     }
 
-    public function addOption(int $option, string $optionType = self::class)
+    /**
+     * Sets an option.
+     *
+     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
+     * @param string $optionType Specifies what the options belong to. Should be a class name.
+     * @return self
+     */
+    public function addOption(int $option, string $optionType = self::class): self
     {
         if ($optionType === self::class) {
             $this->setOptions($this->fileOptions | $option);
@@ -112,7 +135,8 @@ class JsonFile extends Json
     /**
      * Unsets an option.
      *
-     * @param int $option
+     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
+     * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return self
      */
     public function removeOption(int $option, string $optionType = self::class)
@@ -128,7 +152,8 @@ class JsonFile extends Json
     /**
      * Tells whether an option is set or not.
      *
-     * @param int $option
+     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
+     * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return bool
      */
     public function isOptionSet(int $option, string $optionType = self::class): bool
@@ -141,13 +166,13 @@ class JsonFile extends Json
     }
 
     /**
-     * Creates a file if it does not exist, with handling FileOpt::MUST_EXIST option.
+     * Creates a file if it does not exist, regarding to FileOpt::MUST_EXIST option.
      *
      * @return void
      * @throws FileExistenceException
      * @throws FileCreatingException
      */
-    protected function createFileIfNotExists()
+    protected function createFileIfNeeded()
     {
         $filePath = $this->filePath;
 
@@ -163,14 +188,20 @@ class JsonFile extends Json
     }
 
     /**
-     * Saves the data to the file.
+     * Saves current data to the file.
      *
-     * @param int $options The options. {@link http://php.net/json.constants}
+     * @param int $options The options. {@link http://php.net/json.constants} Default save options
+     * is handled by self::$defaultSaveOptions static property.
      * @return self
+     * @throws FileWritingException
      */
-    public function save(int $options = JSON_PRETTY_PRINT): self
+    public function save(int $options = null): self
     {
-        $this->createFileIfNotExists();
+        if ($options === null) {
+            $options = self::$defaultSaveOptions;
+        }
+
+        $this->createFileIfNeeded();
         $filePath = $this->filePath;
 
         if (!is_writable($filePath)) {
@@ -214,9 +245,20 @@ class JsonFile extends Json
         $this->fileHandler = null;
     }
 
-    public static function saveToFile($data, string $filePath, int $fileOptions = 0)
+    /**
+     * Saves JSON data into a file on-the-fly.
+     *
+     * @param mixed $data The data to be saved.
+     * @param string $filePath The file path to be opened. By default, the file will be created if
+     * it does not exist.
+     * @param int $fileOptions A combination of FileOpt::* constants.
+     * @param int $jsonOptions A combination of JsonOpt::* constants.
+     * @return void
+     */
+    public static function saveToFile($data, string $filePath, int $fileOptions = 0,
+        int $jsonOptions = 0)
     {
-        $jsonFile = new self($filePath, $fileOptions);
+        $jsonFile = new self($filePath, $fileOptions, $jsonOptions);
         $jsonFile->set($data);
         $jsonFile->save();
     }
