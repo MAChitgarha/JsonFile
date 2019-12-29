@@ -5,12 +5,9 @@ namespace MAChitgarha\UnitTest\JsonFile;
 
 class File
 {
-    public static $testFiles = [
-        __DIR__ . "/data.json",
-    ];
-    public static $testDirs = [
-        __DIR__ . "/test",
-    ];
+    private const dataPath = __DIR__ . "/../data";
+    public const testFile = self::dataPath . "/test.json";
+    public const testDir = self::dataPath . "/test";
 
     public static function create(string $filePath, int $fileMode)
     {

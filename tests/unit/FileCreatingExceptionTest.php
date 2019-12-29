@@ -34,18 +34,14 @@ class FileCreatingExceptionTest extends TestCase
 
     public function dirAndFileProvider()
     {
-        foreach (File::$testDirs as $dir) {
-            for ($i = 0000; $i < 0300; $i += 0100) {
-                yield [$dir, $i, "data.json"];
-            }
+        for ($i = 0000; $i < 0300; $i += 0100) {
+            yield [File::testDir, $i, "data.json"];
         }
     }
 
     public static function tearDownAfterClass(): void
     {
-        foreach (File::$testDirs as $dir) {
-            chmod($dir, 0777);
-            rmdir($dir);
-        }
+        chmod(File::testDir, 0777);
+        rmdir(File::testDir);
     }
 }

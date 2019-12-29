@@ -30,8 +30,8 @@ class FileExistenceExceptionTest extends TestCase
 
     public function fileProvider()
     {
-        foreach (File::$testFiles as $file) {
-            yield [$file];
-        }
+        return [
+            [File::testFile]
+        ];
     }
 }

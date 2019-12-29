@@ -46,17 +46,13 @@ class FileWritingExceptionTest extends TestCase
 
     public function writingFileProvider()
     {
-        foreach (File::$testFiles as $file) {
-            for ($i = 0400; $i < 0600; $i += 0100) {
-                yield [$file, $i];
-            }
+        for ($i = 0400; $i < 0600; $i += 0100) {
+            yield [File::testFile, $i];
         }
     }
 
     public static function tearDownAfterClass(): void
     {
-        foreach (File::$testFiles as $file) {
-            unlink($file);
-        }
+        unlink(File::testFile);
     }
 }
