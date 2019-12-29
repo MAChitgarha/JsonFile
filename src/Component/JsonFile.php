@@ -94,6 +94,24 @@ class JsonFile extends Json
     }
 
     /**
+     * Saves JSON data into a file on-the-fly.
+     *
+     * @param mixed $data The data to be saved.
+     * @param string $filePath The file path to be opened. By default, the file will be created if
+     * it does not exist.
+     * @param int $fileOptions A combination of FileOpt::* constants.
+     * @param int $jsonOptions A combination of JsonOpt::* constants.
+     * @return void
+     */
+    public static function saveToFile($data, string $filePath, int $fileOptions = 0,
+        int $jsonOptions = 0)
+    {
+        $jsonFile = new self($filePath, $fileOptions, $jsonOptions);
+        $jsonFile->set($data);
+        $jsonFile->save();
+    }
+
+    /**
      * Resets all options.
      *
      * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
@@ -217,21 +235,24 @@ class JsonFile extends Json
      */
     protected static function read(SplFileObject $fileHandler)
     {
+        self::ensureReadable($filePath = $fileHandler->getPathname());
+
         $fileSize = $fileHandler->getSize();
         if ($fileSize === 0) {
-            $data = null;
-        } else {
-            $data = $fileHandler->fread($fileSize);
-            if ($data === false) {
-                $filePath = $fileHandler->getPathname();
-                throw new FileReadingException("Cannot read from file '$filePath'");
-            }
+            return null;
+        }
+
+        $data = $fileHandler->fread($fileSize);
+        if ($data === false) {
+            throw new FileReadingException("Cannot read from file '$filePath'");
         }
         return $data;
     }
 
     protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly)
     {
+        self::ensureWritable($filePath = $fileHandler->getPathname());
+
         if ($readOnly) {
             throw new FileWritingException("File is opened read-only");
         }
@@ -241,8 +262,7 @@ class JsonFile extends Json
         $fileHandler->rewind();
 
         $writtenBytes = $fileHandler->fwrite($data);
-        if ($writtenBytes === null || $writtenBytes !== strlen($data)) {
-            $filePath = $fileHandler->getPathname();
+        if ($writtenBytes || $writtenBytes !== strlen($data)) {
             throw new FileWritingException("Cannot write to file '$filePath'");
         }
     }
@@ -290,23 +310,5 @@ class JsonFile extends Json
     public function __destruct()
     {
         $this->fileHandler = null;
-    }
-
-    /**
-     * Saves JSON data into a file on-the-fly.
-     *
-     * @param mixed $data The data to be saved.
-     * @param string $filePath The file path to be opened. By default, the file will be created if
-     * it does not exist.
-     * @param int $fileOptions A combination of FileOpt::* constants.
-     * @param int $jsonOptions A combination of JsonOpt::* constants.
-     * @return void
-     */
-    public static function saveToFile($data, string $filePath, int $fileOptions = 0,
-        int $jsonOptions = 0)
-    {
-        $jsonFile = new self($filePath, $fileOptions, $jsonOptions);
-        $jsonFile->set($data);
-        $jsonFile->save();
     }
 }
