@@ -1,14 +1,6 @@
 <?php
-/**
- * Unit tests for MAChitgarha\Component\JsonFile class.
- *
- * Go to the project's root and run the tests in this way:
- * phpunit --bootstrap vendor/autoload.php tests/unit
- * Using the --repeat option is recommended.
- *
- * @see MAChitgarha\Component\JsonFile
- */
 
+/** @see MAChitgarha\Component\JsonFile */
 namespace MAChitgarha\UnitTest\JsonFile;
 
 use PHPUnit\Framework\TestCase;
@@ -16,9 +8,6 @@ use MAChitgarha\Component\JsonFile;
 use Webmozart\PathUtil\Path;
 use MAChitgarha\Component\JSON;
 
-/**
- * Tests all methods individually.
- */
 class MethodTest extends TestCase
 {
     /** @var string Prefix path for JSON files to be loaded by JsonFile class. */
