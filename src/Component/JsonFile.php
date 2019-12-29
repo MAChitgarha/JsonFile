@@ -118,9 +118,9 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return self
      */
-    public function setOptions(int $options = 0, string $optionType = self::class): self
+    public function setOptions(int $options = 0, string $optionType = FileOpt::class): self
     {
-        if ($optionType === self::class) {
+        if ($optionType === FileOpt::class) {
             $this->fileOptions = $options;
             $this->fileMustExist = (bool)($options & FileOpt::MUST_EXIST);
         } else {
@@ -136,9 +136,9 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return self
      */
-    public function addOption(int $option, string $optionType = self::class): self
+    public function addOption(int $option, string $optionType = FileOpt::class): self
     {
-        if ($optionType === self::class) {
+        if ($optionType === FileOpt::class) {
             $this->setOptions($this->fileOptions | $option);
         } else {
             parent::addOption($option);
@@ -153,9 +153,9 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return self
      */
-    public function removeOption(int $option, string $optionType = self::class)
+    public function removeOption(int $option, string $optionType = FileOpt::class)
     {
-        if ($optionType === self::class) {
+        if ($optionType === FileOpt::class) {
             $this->setOptions($this->fileOptions & ~$option);
         } else {
             parent::removeOption($option);
@@ -170,9 +170,9 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return bool
      */
-    public function isOptionSet(int $option, string $optionType = self::class): bool
+    public function isOptionSet(int $option, string $optionType = FileOpt::class): bool
     {
-        if ($optionType === self::class) {
+        if ($optionType === FileOpt::class) {
             return ($this->fileOptions & $option) === $option;
         } else {
             return parent::isOptionSet($option);
@@ -232,6 +232,7 @@ class JsonFile extends Json
      *
      * @param SplFileObject $fileHandler
      * @return null|string Returns null if the file is empty.
+     * @throws FileReadingException
      */
     protected static function read(SplFileObject $fileHandler)
     {
@@ -256,6 +257,7 @@ class JsonFile extends Json
      * @param string $data Data to be written.
      * @param bool $readOnly Whether or not the file is read-only.
      * @return void
+     * @throws FileWritingException
      */
     protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly)
     {
