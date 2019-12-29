@@ -34,11 +34,4 @@ class FileExistenceExceptionTest extends TestCase
             yield [$file];
         }
     }
-
-    public static function tearDownAfterClass(): void
-    {
-        foreach (File::$testFiles as $file) {
-            unlink($file);
-        }
-    }
 }

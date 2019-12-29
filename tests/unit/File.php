@@ -8,6 +8,9 @@ class File
     public static $testFiles = [
         __DIR__ . "/data.json",
     ];
+    public static $testDirs = [
+        __DIR__ . "/test",
+    ];
 
     public static function create(string $filePath, int $fileMode)
     {
