@@ -298,6 +298,18 @@ class JsonFile extends Json
     }
 
     /**
+     * Rereads the contents from the file.
+     *
+     * @return self
+     * @throws FileReadingException
+     */
+    public function reload(): self
+    {
+        $this->set(self::read($this->fileHandler));
+        return $this;
+    }
+
+    /**
      * Returns the filename.
      *
      * @return string
