@@ -9,16 +9,6 @@ use MAChitgarha\JsonFile\Exception\FileWritingException;
 
 class FileWritingExceptionTest extends TestCase
 {
-    public static $files = [
-        __DIR__ . "/data.json",
-    ];
-
-    private static function create(string $filePath, int $fileMode)
-    {
-        touch($filePath);
-        chmod($filePath, $fileMode);
-    }
-
     protected function setUp(): void
     {
         $this->expectException(FileWritingException::class);
@@ -28,7 +18,7 @@ class FileWritingExceptionTest extends TestCase
     public function testWritingUnwritableFile(string $filePath, int $fileMode)
     {
         // Arrange
-        self::create($filePath, $fileMode);
+        File::create($filePath, $fileMode);
 
         // Act
         new JsonFile($filePath);
@@ -41,7 +31,7 @@ class FileWritingExceptionTest extends TestCase
     public function testWritingAfterMakingUnwritable(string $filePath, int $fileMode)
     {
         // Arrange
-        self::create($filePath, 0777);
+        File::create($filePath, 0777);
 
         // Act
         $file = new JsonFile($filePath);
@@ -56,7 +46,7 @@ class FileWritingExceptionTest extends TestCase
 
     public function writingFileProvider()
     {
-        foreach (self::$files as $file) {
+        foreach (File::$testFiles as $file) {
             for ($i = 0400; $i < 0600; $i += 0100) {
                 yield [$file, $i];
             }
@@ -65,7 +55,7 @@ class FileWritingExceptionTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        foreach (self::$files as $file) {
+        foreach (File::$testFiles as $file) {
             unlink($file);
         }
     }

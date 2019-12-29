@@ -26,7 +26,8 @@
     "autoload": {
         "psr-4": {
             "MAChitgarha\\": "src/",
-            "MAChitgarha\\JsonFile\\": "src/"
+            "MAChitgarha\\JsonFile\\": "src/",
+            "MAChitgarha\\UnitTest": "tests/unit/"
         }
     },
     "type": "library",

@@ -10,16 +10,6 @@ use MAChitgarha\JsonFile\Option\FileOpt;
 
 class FileReadingExceptionTest extends TestCase
 {
-    public static $files = [
-        __DIR__ . "/data.json",
-    ];
-
-    private static function create(string $filePath, int $fileMode)
-    {
-        touch($filePath);
-        chmod($filePath, $fileMode);
-    }
-
     protected function setUp(): void
     {
         $this->expectException(FileReadingException::class);
@@ -29,7 +19,7 @@ class FileReadingExceptionTest extends TestCase
     public function testReadingUnreadableFile(string $filePath, int $fileMode)
     {
         // Arrange
-        self::create($filePath, $fileMode);
+        File::create($filePath, $fileMode);
 
         // Act
         new JsonFile($filePath, FileOpt::READ_ONLY);
@@ -42,7 +32,7 @@ class FileReadingExceptionTest extends TestCase
     public function testReadingUnreadableFileWithNew(string $filePath, int $fileMode)
     {
         // Arrange
-        self::create($filePath, $fileMode);
+        File::create($filePath, $fileMode);
 
         // Act
         JsonFile::new($filePath, FileOpt::READ_ONLY);
@@ -55,7 +45,7 @@ class FileReadingExceptionTest extends TestCase
     public function testReloadingFile(string $filePath, int $fileMode)
     {
         // Arrange
-        self::create($filePath, $fileMode);
+        File::create($filePath, $fileMode);
 
         // Act
         $file = new JsonFile($filePath, FileOpt::READ_ONLY);
@@ -68,7 +58,7 @@ class FileReadingExceptionTest extends TestCase
 
     public function readingFileProvider()
     {
-        foreach (self::$files as $file) {
+        foreach (File::$testFiles as $file) {
             for ($i = 0000; $i < 0400; $i += 0100) {
                 yield [$file, $i];
             }
@@ -77,7 +67,7 @@ class FileReadingExceptionTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        foreach (self::$files as $file) {
+        foreach (File::$testFiles as $file) {
             unlink($file);
         }
     }
