@@ -13,6 +13,7 @@ use MAChitgarha\Json\Exception\InvalidArgumentException;
 use Webmozart\PathUtil\Path;
 use MAChitgarha\JsonFile\Option\FileOpt;
 use MAChitgarha\Json\Exception\InvalidJsonException;
+use MAChitgarha\Json\Option\JsonOpt;
 use MAChitgarha\JsonFile\Exception\FileExistenceException;
 use MAChitgarha\JsonFile\Exception\FileReadingException;
 use MAChitgarha\JsonFile\Exception\FileWritingException;
@@ -47,7 +48,9 @@ class JsonFile extends Json
      * @param string $filePath The file path to be opened. By default, the file will be created if
      * it does not exist.
      * @param int $fileOptions A combination of FileOpt::* constants.
-     * @param int $jsonOptions A combination of JsonOpt::* constants.
+     * @param int $jsonOptions A combination of JsonOpt::* constants. Note that JsonOpt::AS_JSON is
+     * enabled and cannot be disabled, which means the files must contain a valid JSON data or an
+     * exception will be thrown.
      * @throws InvalidJsonException If the file does not contain a valid JSON data.
      * @throws FileReadingException
      */
@@ -70,7 +73,7 @@ class JsonFile extends Json
 
         parent::__construct(
             self::read($this->fileHandler),
-            $jsonOptions
+            $jsonOptions | JsonOpt::AS_JSON
         );
     }
 
@@ -225,16 +228,17 @@ class JsonFile extends Json
      * Returns the contents of a file.
      *
      * @param SplFileObject $fileHandler
-     * @return null|string Returns null if the file is empty.
+     * @return string Returns "null" if the file is empty, otherwise the file contents are returned.
      * @throws FileReadingException
      */
-    protected static function read(SplFileObject $fileHandler)
+    protected static function read(SplFileObject $fileHandler): string
     {
         self::ensureReadable($filePath = $fileHandler->getPathname());
 
         $fileSize = $fileHandler->getSize();
         if ($fileSize === 0) {
-            return null;
+            // "null" is a the JSON value of null value
+            return "null";
         }
 
         $data = $fileHandler->fread($fileSize);
