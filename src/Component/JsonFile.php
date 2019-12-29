@@ -53,18 +53,19 @@ class JsonFile extends Json
      */
     public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
     {
-        $this->setOptions($fileOptions);
         $this->filePath = $filePath;
+        $this->readOnly = (bool)($fileOptions & FileOpt::READ_ONLY);
+        $this->setOptions($fileOptions);
 
         self::createIfNeeded($filePath, $this->fileMustExist);
 
-        if (!is_readable($filePath)) {
-            throw new FileReadingException("File '$filePath' is not readable");
-        }
-
         clearstatcache();
 
-        $this->readOnly = (bool)($fileOptions & FileOpt::READ_ONLY);
+        self::ensureReadable($filePath);
+        if (!$this->readOnly) {
+            self::ensureWritable($filePath);
+        }
+
         $this->fileHandler = new SplFileObject($filePath, $this->readOnly ? "r" : "r+");
 
         parent::__construct(
@@ -89,7 +90,6 @@ class JsonFile extends Json
         if ($filePath === "") {
             throw new InvalidArgumentException("File path cannot be empty");
         }
-
         return new self($filePath, $fileOptions, $jsonOptions);
     }
 
@@ -182,6 +182,34 @@ class JsonFile extends Json
     }
 
     /**
+     * Throws an exception if a file is not readable.
+     *
+     * @param string $filePath
+     * @return void
+     * @throws FileReadingException
+     */
+    protected static function ensureReadable(string $filePath)
+    {
+        if (!is_readable($filePath)) {
+            throw new FileReadingException("File '$filePath' is not readable");
+        }
+    }
+
+    /**
+     * Throws an exception if a file is not writable.
+     *
+     * @param string $filePath
+     * @return void
+     * @throws FileWritingException
+     */
+    protected static function ensureWritable(string $filePath)
+    {
+        if (!is_writable($filePath)) {
+            throw new FileWritingException("File '$filePath' is not writable");
+        }
+    }
+
+    /**
      * Returns the contents of a file.
      *
      * @param SplFileObject $fileHandler
@@ -212,10 +240,6 @@ class JsonFile extends Json
      */
     public function save(int $options = null): self
     {
-        if ($this->readOnly) {
-            throw new FileWritingException("File is opened as read-only");
-        }
-
         if ($options === null) {
             $options = self::$defaultSaveOptions;
         }
