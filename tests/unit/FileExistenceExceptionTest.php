@@ -3,7 +3,6 @@
 /** @see MAChitgarha\Component\JsonFile */
 namespace MAChitgarha\UnitTest\JsonFile;
 
-use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JsonFile;
 use MAChitgarha\JsonFile\Exception\FileExistenceException;
 use MAChitgarha\JsonFile\Option\FileOpt;
@@ -31,7 +30,7 @@ class FileExistenceExceptionTest extends TestCase
     public function fileProvider()
     {
         return [
-            [File::testFile]
+            [self::getFile(self::JSON_FILE_TEST)]
         ];
     }
 }

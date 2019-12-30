@@ -3,7 +3,6 @@
 /** @see MAChitgarha\Component\JsonFile */
 namespace MAChitgarha\UnitTest\JsonFile;
 
-use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JsonFile;
 use MAChitgarha\Json\Exception\InvalidArgumentException;
 

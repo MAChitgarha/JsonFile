@@ -3,7 +3,6 @@
 /** @see MAChitgarha\Component\JsonFile */
 namespace MAChitgarha\UnitTest\JsonFile;
 
-use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JsonFile;
 use MAChitgarha\Json\Exception\Exception;
 
@@ -20,7 +19,7 @@ class ExceptionTest extends TestCase
         // ...
 
         // Act
-        new JsonFile(File::invalidJsonFile);
+        new JsonFile(self::getFile(self::JSON_FILE_INVALID));
 
         // Assert
         // ...

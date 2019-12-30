@@ -3,7 +3,6 @@
 /** @see MAChitgarha\Component\JsonFile */
 namespace MAChitgarha\UnitTest\JsonFile;
 
-use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JsonFile;
 use MAChitgarha\JsonFile\Exception\FileWritingException;
 
@@ -15,23 +14,24 @@ class FileWritingExceptionTest extends TestCase
     }
 
     /** @dataProvider writingFileProvider */
-    public function testWritingUnwritableFile(string $filePath, int $fileMode)
+    public function testWritingUnwritableFile(string $fileId, int $fileMode)
     {
         // Arrange
-        File::create($filePath, $fileMode);
+        self::createFile($fileId, $fileMode);
 
         // Act
-        new JsonFile($filePath);
+        new JsonFile(self::getFile($fileId));
 
         // Assert
         // ...
     }
 
     /** @dataProvider writingFileProvider */
-    public function testWritingAfterMakingUnwritable(string $filePath, int $fileMode)
+    public function testWritingAfterMakingUnwritable(string $fileId, int $fileMode)
     {
         // Arrange
-        File::create($filePath, 0777);
+        $filePath = self::getFile($fileId);
+        self::createFile($fileId, 0777);
 
         // Act
         $file = new JsonFile($filePath);
@@ -47,12 +47,7 @@ class FileWritingExceptionTest extends TestCase
     public function writingFileProvider()
     {
         for ($i = 0400; $i < 0600; $i += 0100) {
-            yield [File::testFile, $i];
+            yield [self::JSON_FILE_TEST, $i];
         }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        unlink(File::testFile);
     }
 }

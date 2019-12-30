@@ -4,8 +4,6 @@
 namespace MAChitgarha\UnitTest\JsonFile;
 
 use MAChitgarha\Component\JsonFile;
-use MAChitgarha\JsonFile\Option\FileOpt;
-use PHPUnit\Framework\TestCase;
 
 class ConstructionTest extends TestCase
 {
@@ -27,18 +25,8 @@ class ConstructionTest extends TestCase
     public function constructorArgProvider()
     {
         return [
-            [File::testFile, 0, 0],
-            [File::emptyJsonFile, 0, 0],
+            [self::getFile(self::JSON_FILE_TEST)],
+            [self::getFile(self::JSON_FILE_EMPTY)],
         ];
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        foreach ([
-            File::testFile,
-            File::emptyJsonFile,
-        ] as $file) {
-            unlink($file);
-        }
     }
 }

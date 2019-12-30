@@ -3,7 +3,6 @@
 /** @see MAChitgarha\Component\JsonFile */
 namespace MAChitgarha\UnitTest\JsonFile;
 
-use PHPUnit\Framework\TestCase;
 use MAChitgarha\Component\JsonFile;
 use MAChitgarha\JsonFile\Exception\FileReadingException;
 use MAChitgarha\JsonFile\Option\FileOpt;
@@ -16,36 +15,37 @@ class FileReadingExceptionTest extends TestCase
     }
 
     /** @dataProvider readingFileProvider */
-    public function testReadingUnreadableFile(string $filePath, int $fileMode)
+    public function testReadingUnreadableFile(string $fileId, int $fileMode)
     {
         // Arrange
-        File::create($filePath, $fileMode);
+        self::createFile($fileId, $fileMode);
 
         // Act
-        new JsonFile($filePath, FileOpt::READ_ONLY);
+        new JsonFile(self::getFile($fileId), FileOpt::READ_ONLY);
 
         // Assert
         // ...
     }
 
     /** @dataProvider readingFileProvider */
-    public function testReadingUnreadableFileWithNew(string $filePath, int $fileMode)
+    public function testReadingUnreadableFileWithNew(string $fileId, int $fileMode)
     {
         // Arrange
-        File::create($filePath, $fileMode);
+        self::createFile($fileId, $fileMode);
 
         // Act
-        JsonFile::new($filePath, FileOpt::READ_ONLY);
+        JsonFile::new(self::getFile($fileId), FileOpt::READ_ONLY);
 
         // Assert
         // ...
     }
 
     /** @dataProvider readingFileProvider */
-    public function testReloadingFile(string $filePath, int $fileMode)
+    public function testReloadingFile(string $fileId, int $fileMode)
     {
         // Arrange
-        File::create($filePath, $fileMode);
+        $filePath = self::getFile($fileId);
+        self::createFile($fileId, $fileMode);
 
         // Act
         $file = new JsonFile($filePath, FileOpt::READ_ONLY);
@@ -59,12 +59,7 @@ class FileReadingExceptionTest extends TestCase
     public function readingFileProvider()
     {
         for ($i = 0000; $i < 0400; $i += 0100) {
-            yield [File::testFile, $i];
+            yield [self::JSON_FILE_TEST, $i];
         }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        unlink(File::testFile);
     }
 }
