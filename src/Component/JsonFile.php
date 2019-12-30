@@ -177,6 +177,16 @@ class JsonFile extends Json
     }
 
     /**
+     * Returns true if the file is opened read-only.
+     *
+     * @return bool
+     */
+    public function isReadOnly(): bool
+    {
+        return $this->isOptionSet(FileOpt::READ_ONLY, FileOpt::class);
+    }
+
+    /**
      * Creates a file if it does not exist, regarding to FileOpt::MUST_EXIST option.
      *
      * @return void
