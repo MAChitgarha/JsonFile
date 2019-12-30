@@ -96,14 +96,15 @@ class JsonFile extends Json
      * @param int $jsonOptions A combination of JsonOpt::* constants.
      * @return void
      */
-    public static function saveToFile($data, string $filePath, int $options = 0)
+    public static function saveToFile($data, string $filePath, int $options = 0,
+        int $saveOptions = null)
     {
         $jsonFile = new self($filePath, $options);
         if ($data instanceof Json) {
             $data = $data->get();
         }
         $jsonFile->set($data);
-        $jsonFile->save();
+        $jsonFile->save($saveOptions);
     }
 
     /**

@@ -9,7 +9,10 @@ use stdClass;
 
 class SaveTest extends TestCase
 {
-    /** @dataProvider dataProvider */
+    /**
+     * @dataProvider dataProvider
+     * @dataProvider jsonDataProvider
+     */
     public function testSavingOnTheFly($data, string $expectedContents)
     {
         // Assign
@@ -17,6 +20,21 @@ class SaveTest extends TestCase
 
         // Act
         JsonFile::saveToFile($data, $filePath, 0, 0);
+
+        // Assert
+        $this->assertEquals($expectedContents, file_get_contents($filePath));
+    }
+
+    /** @dataProvider dataProvider */
+    public function testSave($data, string $expectedContents)
+    {
+        // Assign
+        $filePath = self::getFile(self::JSON_FILE_TEST);
+        $file = new JsonFile($filePath);
+
+        // Act
+        $file->set($data);
+        $file->save(0);
 
         // Assert
         $this->assertEquals($expectedContents, file_get_contents($filePath));
@@ -31,9 +49,21 @@ class SaveTest extends TestCase
             [19, "19"],
             [3.14, "3.14"],
             [[], "[]"],
-            [[1], "[1]"],
+            [[1, 2], "[1,2]"],
             [new stdClass(), "[]"],
-            [new Json([]), "[]"]
+        ];
+    }
+
+    public function jsonDataProvider()
+    {
+        return [
+            [new Json(null), "null"],
+            [new Json(false), "false"],
+            [new Json(true), "true"],
+            [new Json(20), "20"],
+            [new Json(0.625), "0.625"],
+            [new Json([]), "[]"],
+            [new Json([0, 0]), "[0,0]"],
         ];
     }
 }
