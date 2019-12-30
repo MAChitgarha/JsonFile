@@ -2,7 +2,9 @@ dist: bionic
 language: php
 
 php:
+  - 7.2
   - 7.3
+  - 7.4
 
 before_install:
   - pecl install ast
@@ -11,6 +13,7 @@ install:
 
 before_script: skip
 script:
-  - ./vendor/bin/phan
+  - ./vendor/bin/phan -k .phan/config.php
+  - ./vendor/bin/phan -k .phan/tests.php
   - ./vendor/bin/phpunit
   - ./vendor/bin/php-cs-fixer fix . --dry-run
