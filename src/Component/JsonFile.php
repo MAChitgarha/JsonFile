@@ -214,10 +214,10 @@ class JsonFile extends Json
      * @param SplFileObject $fileHandler
      * @param string $data Data to be written.
      * @param bool $readOnly Whether or not the file is read-only.
-     * @return self
+     * @return void
      * @throws FileWritingException
      */
-    protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly): self
+    protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly)
     {
         if ($readOnly) {
             throw new FileWritingException("File is read-only");
@@ -233,7 +233,6 @@ class JsonFile extends Json
         if (!$writtenBytes || $writtenBytes !== strlen($data)) {
             throw new FileWritingException("Cannot write to file '$filePath'");
         }
-        return $this;
     }
 
     /**
