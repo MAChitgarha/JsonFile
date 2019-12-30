@@ -23,8 +23,10 @@ class SaveTest extends TestCase
         JsonFile::saveToFile($data, $filePath, 0, 0);
 
         // Assert
-        $this->assertEquals($expectedContents,
-            (new JsonFile($filePath, FileOpt::READ_ONLY))->getAsJson());
+        $this->assertEquals(
+            $expectedContents,
+            (new JsonFile($filePath, FileOpt::READ_ONLY))->getAsJson()
+        );
     }
 
     /** @dataProvider dataProvider */
@@ -39,8 +41,10 @@ class SaveTest extends TestCase
         $file->save(0);
 
         // Assert
-        $this->assertEquals($expectedContents,
-            (new JsonFile($filePath, FileOpt::READ_ONLY))->getAsJson());
+        $this->assertEquals(
+            $expectedContents,
+            (new JsonFile($filePath, FileOpt::READ_ONLY))->getAsJson()
+        );
     }
 
     public function dataProvider()
