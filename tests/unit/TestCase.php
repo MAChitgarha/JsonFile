@@ -65,11 +65,12 @@ abstract class TestCase extends PHPUnitTestCase
         throw new InvalidArgumentException("No such file exist ('$which')");
     }
 
-    public static function createFile(string $which, int $fileMode)
+    public static function createFile(string $which, int $fileMode): string
     {
         $filePath = self::getFile($which);
         touch($filePath);
         chmod($filePath, $fileMode);
+        return $filePath;
     }
 
     /**
@@ -84,15 +85,20 @@ abstract class TestCase extends PHPUnitTestCase
     {
         // Files
         foreach (self::$files as $file) {
+            $filename = $file["name"];
             if ($file["anonymous"]) {
-                unlink($file["name"]);
+                if (file_exists($filename)) {
+                    unlink($filename);
+                }
             } else {
-                file_put_contents($file["name"], $file["contents"]);
+                file_put_contents($filename, $file["contents"]);
             }
         }
 
         // Directories
-        chmod(self::TEST_DIR, 0777);
-        Pusheh::removeDirRecursive(self::TEST_DIR);
+        if (is_dir(self::TEST_DIR)) {
+            chmod(self::TEST_DIR, 0777);
+            Pusheh::removeDirRecursive(self::TEST_DIR);
+        }
     }
 }

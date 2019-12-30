@@ -17,10 +17,10 @@ class FileWritingExceptionTest extends TestCase
     public function testWritingUnwritableFile(string $fileId, int $fileMode)
     {
         // Arrange
-        self::createFile($fileId, $fileMode);
+        $filePath = self::createFile($fileId, $fileMode);
 
         // Act
-        new JsonFile(self::getFile($fileId));
+        new JsonFile($filePath);
 
         // Assert
         // ...
@@ -30,8 +30,7 @@ class FileWritingExceptionTest extends TestCase
     public function testWritingAfterMakingUnwritable(string $fileId, int $fileMode)
     {
         // Arrange
-        $filePath = self::getFile($fileId);
-        self::createFile($fileId, 0777);
+        $filePath = self::createFile($fileId, 0777);
 
         // Act
         $file = new JsonFile($filePath);

@@ -18,10 +18,10 @@ class FileReadingExceptionTest extends TestCase
     public function testReadingUnreadableFile(string $fileId, int $fileMode)
     {
         // Arrange
-        self::createFile($fileId, $fileMode);
+        $filePath = self::createFile($fileId, $fileMode);
 
         // Act
-        new JsonFile(self::getFile($fileId), FileOpt::READ_ONLY);
+        new JsonFile($filePath, FileOpt::READ_ONLY);
 
         // Assert
         // ...
@@ -31,10 +31,10 @@ class FileReadingExceptionTest extends TestCase
     public function testReadingUnreadableFileWithNew(string $fileId, int $fileMode)
     {
         // Arrange
-        self::createFile($fileId, $fileMode);
+        $filePath = self::createFile($fileId, $fileMode);
 
         // Act
-        JsonFile::new(self::getFile($fileId), FileOpt::READ_ONLY);
+        JsonFile::new($filePath, FileOpt::READ_ONLY);
 
         // Assert
         // ...
@@ -44,8 +44,7 @@ class FileReadingExceptionTest extends TestCase
     public function testReloadingFile(string $fileId, int $fileMode)
     {
         // Arrange
-        $filePath = self::getFile($fileId);
-        self::createFile($fileId, $fileMode);
+        $filePath = self::createFile($fileId, $fileMode);
 
         // Act
         $file = new JsonFile($filePath, FileOpt::READ_ONLY);
