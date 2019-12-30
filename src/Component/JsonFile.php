@@ -93,7 +93,7 @@ class JsonFile extends Json
      * @param string $filePath The file path to be opened. By default, the file will be created if
      * it does not exist.
      * @param int $options A combination of FileOpt::* and JsonOpt::* options.
-     * @param int $saveOptions Save options (i.e. options about how data should be saved/written).
+     * @param ?int $saveOptions Save options (i.e. options about how data should be saved/written).
      * {@link http://php.net/json.constants} Default save options is handled by
      * self::$defaultSaveOptions static property.
      * @return void

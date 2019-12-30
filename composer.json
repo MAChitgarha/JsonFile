@@ -1,6 +1,7 @@
 {
     "name": "machitgarha/json-file",
     "description": "JSON files on your hands!",
+    "type": "library",
     "authors": [
         {
             "name": "Mohammad Amin Chitgarha",
@@ -18,11 +19,6 @@
     ],
     "license": "MIT",
     "readme": "README.md",
-    "require": {
-        "php": "^7.0",
-        "machitgarha/json": "^1.0.2",
-        "webmozart/path-util": "^2.3"
-    },
     "autoload": {
         "psr-4": {
             "MAChitgarha\\": "src/",
@@ -30,11 +26,15 @@
             "MAChitgarha\\UnitTest\\JsonFile\\": "tests/unit/"
         }
     },
-    "type": "library",
+    "require": {
+        "php": "^7.0",
+        "machitgarha/json": "^1.0.2",
+        "webmozart/path-util": "^2.3"
+    },
     "require-dev": {
         "php": "^7.2",
         "friendsofphp/php-cs-fixer": "^2.16",
-        "phan/phan": "^2.2",
+        "phan/phan": "^2.4",
         "phpunit/phpunit": "^8.5",
         "machitgarha/pusheh": "^0.2.0"
     }
