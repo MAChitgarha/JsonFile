@@ -58,7 +58,7 @@ class JsonFile extends Json
     {
         $this->filePath = $filePath;
         $this->readOnly = (bool)($fileOptions & FileOpt::READ_ONLY);
-        $this->setOptions($fileOptions);
+        $this->setOptions($fileOptions, FileOpt::class);
 
         self::createIfNeeded($filePath, $this->fileMustExist);
 
@@ -115,7 +115,7 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return self
      */
-    public function setOptions(int $options = 0, string $optionType = FileOpt::class): self
+    public function setOptions(int $options = 0, string $optionType = JsonOpt::class): self
     {
         if ($optionType === FileOpt::class) {
             $this->fileOptions = $options;
@@ -133,7 +133,7 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return self
      */
-    public function addOption(int $option, string $optionType = FileOpt::class): self
+    public function addOption(int $option, string $optionType = JsonOpt::class): self
     {
         if ($optionType === FileOpt::class) {
             $this->setOptions($this->fileOptions | $option);
@@ -150,7 +150,7 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return self
      */
-    public function removeOption(int $option, string $optionType = FileOpt::class)
+    public function removeOption(int $option, string $optionType = JsonOpt::class)
     {
         if ($optionType === FileOpt::class) {
             $this->setOptions($this->fileOptions & ~$option);
@@ -167,7 +167,7 @@ class JsonFile extends Json
      * @param string $optionType Specifies what the options belong to. Should be a class name.
      * @return bool
      */
-    public function isOptionSet(int $option, string $optionType = FileOpt::class): bool
+    public function isOptionSet(int $option, string $optionType = JsonOpt::class): bool
     {
         if ($optionType === FileOpt::class) {
             return ($this->fileOptions & $option) === $option;
