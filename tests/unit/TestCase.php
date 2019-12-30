@@ -65,7 +65,7 @@ abstract class TestCase extends PHPUnitTestCase
         throw new InvalidArgumentException("No such file exist ('$which')");
     }
 
-    public static function createFile(string $which, int $fileMode): string
+    public static function createFile(string $which, int $fileMode = 0755): string
     {
         $filePath = self::getFile($which);
         touch($filePath);
@@ -81,7 +81,7 @@ abstract class TestCase extends PHPUnitTestCase
      *
      * @return void
      */
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
         // Files
         foreach (self::$files as $file) {

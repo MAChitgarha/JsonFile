@@ -9,6 +9,11 @@ use MAChitgarha\JsonFile\Option\FileOpt;
 
 class OptionsTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        self::createFile(self::JSON_FILE_TEST);
+    }
+
     /** @dataProvider setOptionsProvider */
     public function testSettingOptions(int $options, array $optionsArr)
     {
