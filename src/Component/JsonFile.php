@@ -99,6 +99,9 @@ class JsonFile extends Json
     public static function saveToFile($data, string $filePath, int $options = 0)
     {
         $jsonFile = new self($filePath, $options);
+        if ($data instanceof Json) {
+            $data = $data->get();
+        }
         $jsonFile->set($data);
         $jsonFile->save();
     }
@@ -220,7 +223,7 @@ class JsonFile extends Json
         $fileHandler->rewind();
 
         $writtenBytes = $fileHandler->fwrite($data);
-        if ($writtenBytes || $writtenBytes !== strlen($data)) {
+        if (!$writtenBytes || $writtenBytes !== strlen($data)) {
             throw new FileWritingException("Cannot write to file '$filePath'");
         }
     }
