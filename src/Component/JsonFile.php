@@ -4,147 +4,268 @@
  *
  * @author Mohammad Amin Chitgarha <machitgarha@outlook.com>
  * @see https://github.com/MAChitgarha/JsonFile
- * @todo Add link to the packagist.
+ * @see https://packagist.org/machitgarha/jsonfile
  */
 
 namespace MAChitgarha\Component;
 
+use MAChitgarha\Json\Exception\InvalidArgumentException;
 use Webmozart\PathUtil\Path;
+use MAChitgarha\JsonFile\Option\FileOpt;
+use MAChitgarha\Json\Exception\InvalidJsonException;
+use MAChitgarha\Json\Option\JsonOpt;
+use MAChitgarha\JsonFile\Exception\FileExistenceException;
+use MAChitgarha\JsonFile\Exception\FileReadingException;
+use MAChitgarha\JsonFile\Exception\FileWritingException;
+use MAChitgarha\JsonFile\Exception\FileCreatingException;
+use SplFileObject;
 
 /**
  * Handles JSON files.
  *
- * Reads a JSON file, make some operations on it and saves it.
- *
- * @todo Import the link of the GitHub Wiki.
+ * @see https://github.com/MAChitgarha/JsonFile/wiki
  */
-class JsonFile extends JSON
+class JsonFile extends Json
 {
     /** @var string */
     protected $filePath;
 
-    /** @var bool {@see JsonFile::FILE_MUST_EXIST} */
+    /** @var ?\SplFileObject File handler for reading and (probably) writing. */
+    protected $fileHandler;
+
+    /** @var bool {@see FileOpt::MUST_EXIST} */
     protected $fileMustExist = false;
+    /** @var bool {@see FileOpt::READ_ONLY} (Settable only via constructor) */
+    protected $readOnly = false;
 
-    /** @var bool {@see JsonFile::IGNORE_INVALID_FILE} */
-    protected $ignoreInvalidFile = false;
-
-    /** @var int Forces the file to be exist, otherwise it will throw an exception. */
-    const FILE_MUST_EXIST = 1;
-    /** @var int Ignore invalid JSON data in the file, and set data to an empty array. */
-    const IGNORE_INVALID_FILE = 2;
+    /** @var int {@see self::save()} */
+    public static $defaultSaveOptions = JSON_PRETTY_PRINT;
 
     /**
-     * Reads the JSON file data.
-     *
-     * The default behavior (to override these settings, use options argument):
-     * If the file doesn't exist, it will create.
-     * If the file contains invalid JSON data, then it will throw an exception.
-     *
-     * @param string $filePath File path to be read.
-     * @param integer $options Available options: FILE_MUST_EXIST, IGNORE_INVALID_FILE
-     * @throws \Exception When the file doesn't exist and FILE_MUST_EXIST is on.
-     * @throws \Exception When the file contains invalid JSON and IGNORE_INVALID_FILE is off.
+     * @param string $filePath The file path to be opened. By default, the file will be created if
+     * it does not exist.
+     * @param int $options A combination of JsonOpt::* and FileOpt::* options. JsonOpt::AS_JSON is
+     * enabled and cannot be disabled, which means the files must contain a valid JSON data or an
+     * exception will be thrown.
+     * @throws InvalidJsonException If the file does not contain a valid JSON data.
+     * @throws FileReadingException
      */
     public function __construct(string $filePath, int $options = 0)
     {
-        // Extract options
-        $this->fileMustExist = (bool)($options & self::FILE_MUST_EXIST);
-        $this->ignoreInvalidFile = (bool)($options & self::IGNORE_INVALID_FILE);
-
         $this->filePath = $filePath;
+        $this->readOnly = (bool)($options & FileOpt::READ_ONLY);
+        $this->setOptions($options);
 
-        $data = "";
-        // Read the file
-        try {
-            $data = $this->read();
-            // The file doesn't exist
-        } catch (\Exception $e) {
-            if ($this->fileMustExist) {
-                throw $e;
+        self::createIfNeeded($filePath, $this->fileMustExist);
+
+        clearstatcache();
+
+        self::ensureReadable($filePath);
+        if (!$this->readOnly) {
+            self::ensureWritable($filePath);
+        }
+
+        $this->fileHandler = new SplFileObject($filePath, $this->readOnly ? "r" : "r+");
+
+        parent::__construct(
+            self::read($this->fileHandler),
+            $options | JsonOpt::AS_JSON
+        );
+    }
+
+    /**
+     * Creates a new JsonFile instance.
+     *
+     * @see JsonFile::__construct()
+     */
+    public static function new($filePath = null, int $options = 0): self
+    {
+        if ($filePath === null) {
+            throw new InvalidArgumentException("File path must be set");
+        }
+        return new self($filePath, $options);
+    }
+
+    /**
+     * Saves JSON data into a file on-the-fly.
+     *
+     * @param mixed $data The data to be saved.
+     * @param string $filePath The file path to be opened. By default, the file will be created if
+     * it does not exist.
+     * @param int $options A combination of FileOpt::* and JsonOpt::* options.
+     * @param ?int $saveOptions Save options (i.e. options about how data should be saved/written).
+     * {@link http://php.net/json.constants} Default save options is handled by
+     * self::$defaultSaveOptions static property.
+     * @return void
+     */
+    public static function saveToFile(
+        $data,
+        string $filePath,
+        int $options = 0,
+        int $saveOptions = null
+    ) {
+        $jsonFile = new self($filePath, $options);
+        if ($data instanceof Json) {
+            $data = $data->get();
+        }
+        $jsonFile->set($data);
+        $jsonFile->save($saveOptions);
+    }
+
+    /**
+     * Resets all options.
+     *
+     * @param int $options A combination of JsonOpt::* and FileOpt::* options.
+     * @return self
+     */
+    public function setOptions(int $options = 0): self
+    {
+        parent::setOptions($options);
+        $this->fileMustExist = (bool)($options & FileOpt::MUST_EXIST);
+        return $this;
+    }
+
+    /**
+     * Returns true if the file is opened read-only.
+     *
+     * @return bool
+     */
+    public function isReadOnly(): bool
+    {
+        return $this->isOptionSet(FileOpt::READ_ONLY);
+    }
+
+    /**
+     * Creates a file if it does not exist, regarding to FileOpt::MUST_EXIST option.
+     *
+     * @return void
+     * @throws FileExistenceException
+     * @throws FileCreatingException
+     */
+    protected static function createIfNeeded(string $filePath, bool $fileMustExist)
+    {
+        if (!file_exists($filePath)) {
+            if ($fileMustExist) {
+                throw new FileExistenceException("File '$filePath' does not exist");
             } else {
-                $this->create();
+                if (!@touch($filePath)) {
+                    throw new FileCreatingException("File '$filePath' cannot be created");
+                }
             }
-        }
-
-        try {
-            // If the file is empty, set data to an empty array
-            if ($data === "") {
-                $data = [];
-            }
-            parent::__construct($data);
-            // The file doesn't contain an invalid JSON
-        } catch (\InvalidArgumentException $e) {
-            if (!$this->ignoreInvalidFile) {
-                throw new \Exception("File does not contain a valid JSON");
-            }
-            parent::__construct();
         }
     }
 
     /**
-     * Reads from the file.
+     * Throws an exception if a file is not readable.
      *
-     * @return string File contents.
-     * @throws \Exception When the file doesn't exist.
-     * @throws \Exception When the file isn't readable (e.g. permission denied).
+     * @param string $filePath
+     * @return void
+     * @throws FileReadingException
      */
-    protected function read()
+    protected static function ensureReadable(string $filePath)
     {
-        if (!file_exists($this->filePath)) {
-            throw new \Exception("File doesn't exist");
+        if (!is_readable($filePath)) {
+            throw new FileReadingException("File '$filePath' is not readable");
         }
-        if (!is_readable($this->filePath)) {
-            throw new \Exception("File is not readable");
-        }
-
-        return file_get_contents($this->filePath);
     }
 
     /**
-     * Writes to the file.
+     * Throws an exception if a file is not writable.
      *
+     * @param string $filePath
+     * @return void
+     * @throws FileWritingException
+     */
+    protected static function ensureWritable(string $filePath)
+    {
+        if (!is_writable($filePath)) {
+            throw new FileWritingException("File '$filePath' is not writable");
+        }
+    }
+
+    /**
+     * Returns the contents of a file.
+     *
+     * @param SplFileObject $fileHandler
+     * @return string Returns "null" if the file is empty, otherwise the file contents are returned.
+     * @throws FileReadingException
+     */
+    protected static function read(SplFileObject $fileHandler): string
+    {
+        self::ensureReadable($filePath = $fileHandler->getPathname());
+
+        $fileSize = $fileHandler->getSize();
+        if ($fileSize === 0) {
+            // "null" is a the JSON value of null value
+            return "null";
+        }
+
+        $fileHandler->rewind();
+        $data = $fileHandler->fread($fileSize);
+        if ($data === false) {
+            throw new FileReadingException("Cannot read from file '$filePath'");
+        }
+        return $data;
+    }
+
+    /**
+     * Writes data to the specified file.
+     *
+     * @param SplFileObject $fileHandler
      * @param string $data Data to be written.
-     * @return boolean If the data is written or not.
+     * @param bool $readOnly Whether or not the file is read-only.
+     * @return void
+     * @throws FileWritingException
      */
-    protected function write(string $data)
+    protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly)
     {
-        if (!file_exists($this->filePath)) {
-            throw new \Exception("File doesn't exist");
-        }
-        if (!is_writable($this->filePath)) {
-            throw new \Exception("File is not readable");
+        if ($readOnly) {
+            throw new FileWritingException("File is read-only");
         }
 
-        // Write to the file
-        $bytesWritten = @file_put_contents($this->filePath, $data);
+        self::ensureWritable($filePath = $fileHandler->getPathname());
 
-        return $bytesWritten === strlen($data);
+        // Making the file empty
+        $fileHandler->ftruncate(0);
+        $fileHandler->rewind();
+
+        $writtenBytes = $fileHandler->fwrite($data);
+        if (!$writtenBytes || $writtenBytes !== strlen($data)) {
+            throw new FileWritingException("Cannot write to file '$filePath'");
+        }
     }
 
     /**
-     * Saves the data to the file.
+     * Saves current data to the file.
      *
-     * @param integer $options The options. {@link http://php.net/json.constants}
-     * @return boolean If the saving was successful or not.
+     * @param ?int $options The options. {@link http://php.net/json.constants} Default save options
+     * is handled by self::$defaultSaveOptions static property.
+     * @return self
+     * @throws FileWritingException
      */
-    public function save(int $options = JSON_PRETTY_PRINT)
+    public function save(int $options = null): self
     {
-        return $this->write($this->getDataAsJson($options));
+        if ($options === null) {
+            $options = self::$defaultSaveOptions;
+        }
+
+        self::createIfNeeded($this->filePath, $this->fileMustExist);
+        self::write($this->fileHandler, $this->getAsJson($options), $this->readOnly);
+
+        return $this;
     }
 
     /**
-     * Creates the file.
+     * Rereads the contents from the file.
      *
-     * @return true
-     * @throws \Exception If the file cannot be created.
+     * @return self
+     * @throws FileReadingException
      */
-    protected function create()
+    public function reload(): self
     {
-        if (!@touch($this->filePath)) {
-            throw new \Exception("Cannot create the file");
-        }
-        return true;
+        clearstatcache();
+        parent::__construct(self::read($this->fileHandler));
+        return $this;
     }
 
     /**
@@ -165,5 +286,10 @@ class JsonFile extends JSON
     public function getFilePath()
     {
         return Path::canonicalize($this->filePath);
+    }
+
+    public function __destruct()
+    {
+        $this->fileHandler = null;
     }
 }

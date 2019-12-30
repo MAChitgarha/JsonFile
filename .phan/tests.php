@@ -6,11 +6,11 @@
 
 return [
     "directory_list" => [
-        "src/",
+        "tests/unit/",
         "vendor/",
     ],
     "exclude_analysis_directory_list" => [
         "vendor/",
     ],
-    "target_php_version" => "7.0",
+    "target_php_version" => "7.2",
 ];
