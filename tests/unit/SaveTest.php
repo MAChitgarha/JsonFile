@@ -5,6 +5,7 @@ namespace MAChitgarha\UnitTest\JsonFile;
 
 use MAChitgarha\Component\Json;
 use MAChitgarha\Component\JsonFile;
+use MAChitgarha\JsonFile\Option\FileOpt;
 use stdClass;
 
 class SaveTest extends TestCase
@@ -22,7 +23,8 @@ class SaveTest extends TestCase
         JsonFile::saveToFile($data, $filePath, 0, 0);
 
         // Assert
-        $this->assertEquals($expectedContents, file_get_contents($filePath));
+        $this->assertEquals($expectedContents,
+            (new JsonFile($filePath, FileOpt::READ_ONLY))->getAsJson());
     }
 
     /** @dataProvider dataProvider */
@@ -37,7 +39,8 @@ class SaveTest extends TestCase
         $file->save(0);
 
         // Assert
-        $this->assertEquals($expectedContents, file_get_contents($filePath));
+        $this->assertEquals($expectedContents,
+            (new JsonFile($filePath, FileOpt::READ_ONLY))->getAsJson());
     }
 
     public function dataProvider()
