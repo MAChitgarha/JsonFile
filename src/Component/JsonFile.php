@@ -195,6 +195,7 @@ class JsonFile extends Json
             return "null";
         }
 
+        $fileHandler->rewind();
         $data = $fileHandler->fread($fileSize);
         if ($data === false) {
             throw new FileReadingException("Cannot read from file '$filePath'");
@@ -257,7 +258,8 @@ class JsonFile extends Json
      */
     public function reload(): self
     {
-        $this->set(self::read($this->fileHandler));
+        clearstatcache();
+        parent::__construct(self::read($this->fileHandler));
         return $this;
     }
 
