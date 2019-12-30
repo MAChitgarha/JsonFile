@@ -63,6 +63,18 @@ class OptionsTest extends TestCase
         $this->assertFalse($file->isOptionSet($option));
     }
 
+    public function testIsReadOnly()
+    {
+        // Assign
+        $file = new JsonFile(self::getFile(self::JSON_FILE_EMPTY), FileOpt::READ_ONLY);
+
+        // Act
+        // ...
+
+        // Assert
+        $this->assertTrue($file->isReadOnly());
+    }
+
     public function setOptionsProvider()
     {
         $options = [
