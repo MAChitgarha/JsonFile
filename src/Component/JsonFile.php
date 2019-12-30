@@ -33,9 +33,6 @@ class JsonFile extends Json
     /** @var ?\SplFileObject File handler for reading and (probably) writing. */
     protected $fileHandler;
 
-    /** @var int A combination of FileOpt::* options. */
-    protected $fileOptions;
-
     /** @var bool {@see FileOpt::MUST_EXIST} */
     protected $fileMustExist = false;
     /** @var bool {@see FileOpt::READ_ONLY} (Settable only via constructor) */
@@ -47,18 +44,17 @@ class JsonFile extends Json
     /**
      * @param string $filePath The file path to be opened. By default, the file will be created if
      * it does not exist.
-     * @param int $fileOptions A combination of FileOpt::* constants.
-     * @param int $jsonOptions A combination of JsonOpt::* constants. Note that JsonOpt::AS_JSON is
+     * @param int $options A combination of JsonOpt::* and FileOpt::* options. JsonOpt::AS_JSON is
      * enabled and cannot be disabled, which means the files must contain a valid JSON data or an
      * exception will be thrown.
      * @throws InvalidJsonException If the file does not contain a valid JSON data.
      * @throws FileReadingException
      */
-    public function __construct(string $filePath, int $fileOptions = 0, int $jsonOptions = 0)
+    public function __construct(string $filePath, int $options = 0)
     {
         $this->filePath = $filePath;
-        $this->readOnly = (bool)($fileOptions & FileOpt::READ_ONLY);
-        $this->setOptions($fileOptions, FileOpt::class);
+        $this->readOnly = (bool)($options & FileOpt::READ_ONLY);
+        $this->setOptions($options);
 
         self::createIfNeeded($filePath, $this->fileMustExist);
 
@@ -73,7 +69,7 @@ class JsonFile extends Json
 
         parent::__construct(
             self::read($this->fileHandler),
-            $jsonOptions | JsonOpt::AS_JSON
+            $options | JsonOpt::AS_JSON
         );
     }
 
@@ -82,12 +78,12 @@ class JsonFile extends Json
      *
      * @see JsonFile::__construct()
      */
-    public static function new($filePath = null, int $fileOptions = 0, int $jsonOptions = 0): self
+    public static function new($filePath = null, int $options = 0): self
     {
         if ($filePath === null) {
             throw new InvalidArgumentException("File path must be set");
         }
-        return new self($filePath, $fileOptions, $jsonOptions);
+        return new self($filePath, $options);
     }
 
     /**
@@ -100,10 +96,9 @@ class JsonFile extends Json
      * @param int $jsonOptions A combination of JsonOpt::* constants.
      * @return void
      */
-    public static function saveToFile($data, string $filePath, int $fileOptions = 0,
-        int $jsonOptions = 0)
+    public static function saveToFile($data, string $filePath, int $options = 0)
     {
-        $jsonFile = new self($filePath, $fileOptions, $jsonOptions);
+        $jsonFile = new self($filePath, $options);
         $jsonFile->set($data);
         $jsonFile->save();
     }
@@ -111,69 +106,14 @@ class JsonFile extends Json
     /**
      * Resets all options.
      *
-     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
-     * @param string $optionType Specifies what the options belong to. Should be a class name.
+     * @param int $options A combination of JsonOpt::* and FileOpt::* options.
      * @return self
      */
-    public function setOptions(int $options = 0, string $optionType = JsonOpt::class): self
+    public function setOptions(int $options = 0): self
     {
-        if ($optionType === FileOpt::class) {
-            $this->fileOptions = $options;
-            $this->fileMustExist = (bool)($options & FileOpt::MUST_EXIST);
-        } else {
-            parent::setOptions($options);
-        }
+        parent::setOptions($options);
+        $this->fileMustExist = (bool)($options & FileOpt::MUST_EXIST);
         return $this;
-    }
-
-    /**
-     * Sets an option.
-     *
-     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
-     * @param string $optionType Specifies what the options belong to. Should be a class name.
-     * @return self
-     */
-    public function addOption(int $option, string $optionType = JsonOpt::class): self
-    {
-        if ($optionType === FileOpt::class) {
-            $this->setOptions($this->fileOptions | $option);
-        } else {
-            parent::addOption($option);
-        }
-        return $this;
-    }
-
-    /**
-     * Unsets an option.
-     *
-     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
-     * @param string $optionType Specifies what the options belong to. Should be a class name.
-     * @return self
-     */
-    public function removeOption(int $option, string $optionType = JsonOpt::class)
-    {
-        if ($optionType === FileOpt::class) {
-            $this->setOptions($this->fileOptions & ~$option);
-        } else {
-            parent::removeOption($option);
-        }
-        return $this;
-    }
-
-    /**
-     * Tells whether an option is set or not.
-     *
-     * @param int $options A combination of JsonOpt::* options or FileOpt::* ones.
-     * @param string $optionType Specifies what the options belong to. Should be a class name.
-     * @return bool
-     */
-    public function isOptionSet(int $option, string $optionType = JsonOpt::class): bool
-    {
-        if ($optionType === FileOpt::class) {
-            return ($this->fileOptions & $option) === $option;
-        } else {
-            return parent::isOptionSet($option);
-        }
     }
 
     /**
@@ -183,7 +123,7 @@ class JsonFile extends Json
      */
     public function isReadOnly(): bool
     {
-        return $this->isOptionSet(FileOpt::READ_ONLY, FileOpt::class);
+        return $this->isOptionSet(FileOpt::READ_ONLY);
     }
 
     /**
