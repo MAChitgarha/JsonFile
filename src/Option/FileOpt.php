@@ -13,7 +13,7 @@ class FileOpt
 
     /**
      * @var int Opens the file as read only (i.e. cannot save changes to the file).
-     * This option cannot be changed after instantiation.
+     * This option cannot be changed after instantiation (i.e. only affects constructor).
      */
     const READ_ONLY = 2;
 }

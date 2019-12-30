@@ -59,8 +59,8 @@ abstract class TestCase extends PHPUnitTestCase
 
     public static function getFile(string $which)
     {
-        if (isset(self::$files[$which])) {
-            return self::$files[$which];
+        if (isset(self::$files[$which]["name"])) {
+            return self::$files[$which]["name"];
         }
         throw new InvalidArgumentException("No such file exist ('$which')");
     }

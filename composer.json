@@ -35,6 +35,7 @@
         "php": "^7.2",
         "friendsofphp/php-cs-fixer": "^2.15",
         "phan/phan": "^2.2",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5",
+        "machitgarha/pusheh": "^0.2.0"
     }
 }

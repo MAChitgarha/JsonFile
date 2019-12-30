@@ -45,7 +45,7 @@ class FileCreatingExceptionTest extends TestCase
     public function dirAndFileProvider()
     {
         for ($i = 0000; $i < 0300; $i += 0100) {
-            yield [self::getFile(self::JSON_FILE_TEST), $i, "test.json"];
+            yield [self::TEST_DIR, $i, "test.json"];
         }
     }
 }
