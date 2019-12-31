@@ -58,8 +58,6 @@ class JsonFile extends Json
 
         self::createIfNeeded($filePath, $this->fileMustExist);
 
-        clearstatcache();
-
         self::ensureReadable($filePath);
         if (!$this->readOnly) {
             self::ensureWritable($filePath);
@@ -144,6 +142,8 @@ class JsonFile extends Json
      */
     protected static function createIfNeeded(string $filePath, bool $fileMustExist)
     {
+        clearstatcache();
+
         if (!file_exists($filePath)) {
             if ($fileMustExist) {
                 throw new FileExistenceException("File '$filePath' does not exist");
@@ -192,6 +192,8 @@ class JsonFile extends Json
      */
     protected static function read(SplFileObject $fileHandler): string
     {
+        clearstatcache();
+
         self::ensureReadable($filePath = $fileHandler->getPathname());
 
         $fileSize = $fileHandler->getSize();
@@ -219,6 +221,8 @@ class JsonFile extends Json
      */
     protected static function write(SplFileObject $fileHandler, string $data, bool $readOnly)
     {
+        clearstatcache();
+
         if ($readOnly) {
             throw new FileWritingException("File is read-only");
         }
@@ -263,7 +267,6 @@ class JsonFile extends Json
      */
     public function reload(): self
     {
-        clearstatcache();
         parent::__construct(self::read($this->fileHandler));
         return $this;
     }
