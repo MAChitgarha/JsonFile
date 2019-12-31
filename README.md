@@ -1,16 +1,18 @@
-## JSONFile
+## JsonFile
 
-![Version](https://img.shields.io/github/release/MAChitgarha/JSONFile.svg?label=Release)
+![Version](https://img.shields.io/github/release/MAChitgarha/JsonFile.svg?label=Release)
 
-JSONFile is class which helps you handling your JSON files much easier and faster, e.g. handling JSON configuration files. You can extract data from the file as your needs, or edit the file as you want.
+JsonFile helps you playing with JSON files. Enjoy!
 
 ### Documentation
 
-See [the wiki](https://github.com/MAChitgarha/JSONFile/wiki).
+See [the wiki](https://github.com/MAChitgarha/JsonFile/wiki).
+
+**Note:** The wiki is currently outdated. The documentation will be updated as soon as possible.
 
 ### Installing
 
-Easy. You can install it using Composer:
+Composer is here:
 
 ```
 composer require machitgarha/json-file

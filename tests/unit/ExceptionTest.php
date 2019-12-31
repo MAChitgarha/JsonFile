@@ -1,35 +1,27 @@
 <?php
-/**
- * Unit tests for MAChitgarha\Component\JSONFile class.
- *
- * Go to the project's root and run the tests in this way:
- * phpunit --bootstrap vendor/autoload.php tests/unit
- * Using the --repeat option is recommended.
- *
- * @see MAChitgarha\Component\JSONFile
- */
 
-namespace MAChitgarha\UnitTest\JSONFile;
+/** @see MAChitgarha\Component\JsonFile */
+namespace MAChitgarha\UnitTest\JsonFile;
 
-use PHPUnit\Framework\TestCase;
-use MAChitgarha\Component\JSONFile;
+use MAChitgarha\Component\JsonFile;
+use MAChitgarha\Json\Exception\Exception;
 
-/**
- * Expect \Exception in all of these tests.
- */
 class ExceptionTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
     }
 
-    /**
-     * Test options passed to the constructor.
-     */
-    public function testConstructorOptions()
+    public function testInvalidJsonFile()
     {
-        new JSONFile(__DIR__ . "/data.json", JSONFile::FILE_MUST_EXIST);
-        new JSONFile(__DIR__ . "/../data/bad-json.json");
+        // Assign
+        // ...
+
+        // Act
+        new JsonFile(self::getFile(self::JSON_FILE_INVALID));
+
+        // Assert
+        // ...
     }
 }
