@@ -9,6 +9,8 @@ JsonFile helps you playing with JSON files. Built on top of [Json](https://githu
 
 This repository is no longer maintained, and is deprecated, due to the deprecation of the upstream [Json](https://github.com/machitgarha/jsonfile) package (see the README.md of the repository for more details). Its use is highly discouraged.
 
+Feel free to open an issue, if you think the library should be maintained.
+
 You can use [Webmozart Json](https://github.com/webmozart/json) instead.
 
 ## Documentation
